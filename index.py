@@ -10,7 +10,7 @@ import pandas as pd
 from app import app 
 
 #app = dash.Dash(__name__, suppress_callback_exceptions=False, title='KWT-Community', external_stylesheets=[dbc.themes.GRID, dbc.icons.FONT_AWESOME])
-#server = app.server   
+server = app.server   
 
 #theme_toggle = dtc.ThemeToggle()
 
@@ -196,4 +196,4 @@ def toggle_collapse(input1, input2, input3):#, input4, input5):
     #    ])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
