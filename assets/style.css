@@ -1,0 +1,88 @@
+/* colors variables settings */
+
+:root {
+  --bgColor: rgb(0, 0, 0);
+  --textDefault: rgb(255, 255, 255);
+  --primary: rgba(200, 180, 180, 1);
+  --secondary: #7fb48c;
+  --terciary: #46ffa2;
+  --altbgColor: rgba(200, 130, 90, 0.4);
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+:root[data-theme='dark'] {
+	--bgColor: #000;  
+  --textDefault: #fff;
+  --primary: #ACC2FF;
+  --secondary: #FFAFD0;
+  --terciary: #0a8b4b;
+}
+
+html {
+  margin: 0px 0px 0px 0px ;
+  padding: 0px 0px 0px 0px;
+  text-align: left;
+  color: primary;
+  text-decoration: none;
+} 
+
+body {
+  margin: 0px 0px 0px 0px ;
+  padding: 0px 0px 0px 0px;
+  background-color: var(--bgColor);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.topnav {
+  margin: 0px 0px 0px 0px ;
+  padding: 0px 0px 0px 0px;
+  color: var(--primary);
+  text-decoration: none;
+  display: block;
+  position: sticky;
+  padding: 10px;
+  text-align: right;
+  justify-content: right;
+  width: 100%
+}
+
+.sidenav {
+  margin: 0px 0px 0px 0px ;
+  padding: 0px 0px 0px 0px;
+  background-color: var(--primary);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.content {
+  padding: 1rem;
+  display: flex;
+}
+
+.padding16.radius8 {
+  border-radius: 4px;
+}
+
+.padding16.radius8:hover {
+  box-shadow: 0px 0px 0px 2px var(--primary) !important;
+}
+
+.trich_card.dark .card .git, .card {
+  background-color: rgb(36, 36, 36) !important;
+  color: var(--primary) !important;
+}
+
+div.inline-block > span.mr-1.self_center.badge {
+  background-color: var(--primary) !important;
+}
+
+.cardSize {
+  width: 332px !important;
+}
