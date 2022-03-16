@@ -6,7 +6,6 @@ import dash_bootstrap_components as dbc
 import dash_trich_components as dtc
 from dash.dependencies import Input, Output, State
 import pandas as pd
-import webbrowser
 
 app = dash.Dash(__name__, suppress_callback_exceptions=False, title='KWT-Community', external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 server = app.server   
@@ -151,12 +150,12 @@ def toggle_collapse(input1, input2, input3, input4, input5):
     if btn_df.idxmax(axis=1).values == "input4":
         return html.Div([
             content_1,
-            webbrowser.open('https://github.com/KurmasanaWT', new=2, autoraise=True)
+            #dcc.Link(href='https://github.com/KurmasanaWT')
         ])
     if btn_df.idxmax(axis=1).values == "input5":
         return html.Div([
             content_1,
-            webbrowser.open('https://twitter.com/KurmasanaWT', new=2, autoraise=True)
+            #dcc.Link('https://twitter.com/KurmasanaWT')
         ])
 
 if __name__ == '__main__':
