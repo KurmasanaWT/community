@@ -3,11 +3,11 @@
 :root {
   --bgColor: rgb(0, 0, 0);
   --textDefault: rgb(255, 255, 255);
-  --primary: rgba(200, 180, 180, 1);
-  --secondary: #7fb48c;
-  --terciary: #46ffa2;
-  --linkcolor: #0a0;
-  --altbgColor: rgba(200, 130, 90, 0.4);
+  --primary: rgba(200, 180, 180, 1) !important;
+  --secondary: #7fb48c !important;
+  --terciary: #0a0 !important;
+  --linkcolor: #0a0 !important;
+  --altbgColor: rgba(200, 130, 90, 0.4) !important;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -26,8 +26,8 @@
 }
 
 html {
-  margin: 0px 0px 0px 0px ;
-  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px !important;
+  padding: 0px 0px 0px 0px !important;
   font-size: 14px;
   text-align: left;
   color: primary;
@@ -35,37 +35,31 @@ html {
 } 
 
 body {
-  margin: 0px 0px 0px 0px ;
-  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px !important;
+  padding: 0px 0px 0px 0px !important;
   background-color: var(--bgColor);
   color: var(--primary);
   text-decoration: none;
 }
 
-/* Float four columns side by side */
-div.col {
-  float: left;
-  width: 4;
-  padding: 0 10px;
-}
-
-/* Responsive columns - one column layout (vertical) on small screens */
-@media screen and (max-width: 600px) {
-  div.col {
-    width: 12;
-    display: block;
-    margin-bottom: 20px;
+a {
+  color: var(--linkcolor);
+  text-decoration: none;
+ }
+ 
+ a:hover {
+  color: var(--linkcolor);
+  font-weight: bolder;
   }
-}
 
 .topnav {
   margin: 0px 0px 0px 0px ;
-  padding: 0px 0px 0px 0px;
-  color: var(--primary);
+  padding: 9px 10px 8px 10px;
+  background-color: transparent;
   text-decoration: none;
   display: block;
   position: sticky;
-  padding: 10px;
+
   text-align: right;
   justify-content: right;
   width: 100%
@@ -73,18 +67,15 @@ div.col {
 
 .sidenav {
   margin: 0px 0px 0px 0px ;
-  padding: 0px 0px 0px 0px;
-  background-color: var(--primary);
+  padding: 0px 0px 0px 0px ;
+  background-color: rgba(0, 0, 0, 0.5) !important;
   color: var(--primary);
   text-decoration: none;
 }
 
 .content {
-  padding: 1rem;
+  padding-top:20px;
   display: flex;
-  margin-right: 10px;
-  margin-bottom: 10px;
-
 }
 
 .padding16.radius8 {
@@ -104,6 +95,23 @@ div.inline-block > span.mr-1.self_center.badge {
   background-color: var(--primary) !important;
 }
 
+a.btn.btn-primary {
+  color: #000 !important;
+  background-color:  var(--primary) !important;
+  border-color:  var(--primary) !important;
+  margin: 5px !important;
+}
+
+a.btn.btn-primary:hover {
+  background-color:  var(--terciary) !important;
+}
+
+.badge {
+  color: #000 !important;
+  background-color: var(--primary) !important;
+  margin: 2px;
+}
+
 .cardSize {
   padding: 5px;
   display: flex;
@@ -112,18 +120,8 @@ div.inline-block > span.mr-1.self_center.badge {
   margin-bottom: 10px;
 }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: grid;
-  clear: both;
+.card-header {
+  text-align:center;
+  color: var(--terciary);
+  font-weight:bolder;
 }
-
-a {
- color: var(--linkcolor) !important;
- text-decoration: none;
-}
-
-a:hover {
-  font-weight: bolder;
- }
