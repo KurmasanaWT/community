@@ -6,6 +6,7 @@
   --primary: rgba(200, 180, 180, 1);
   --secondary: #7fb48c;
   --terciary: #46ffa2;
+  --linkcolor: #0a0;
   --altbgColor: rgba(200, 130, 90, 0.4);
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
@@ -27,6 +28,7 @@
 html {
   margin: 0px 0px 0px 0px ;
   padding: 0px 0px 0px 0px;
+  font-size: 14px;
   text-align: left;
   color: primary;
   text-decoration: none;
@@ -38,6 +40,22 @@ body {
   background-color: var(--bgColor);
   color: var(--primary);
   text-decoration: none;
+}
+
+/* Float four columns side by side */
+div.col {
+  float: left;
+  width: 4;
+  padding: 0 10px;
+}
+
+/* Responsive columns - one column layout (vertical) on small screens */
+@media screen and (max-width: 600px) {
+  div.col {
+    width: 12;
+    display: block;
+    margin-bottom: 20px;
+  }
 }
 
 .topnav {
@@ -64,6 +82,9 @@ body {
 .content {
   padding: 1rem;
   display: flex;
+  margin-right: 10px;
+  margin-bottom: 10px;
+
 }
 
 .padding16.radius8 {
@@ -84,5 +105,25 @@ div.inline-block > span.mr-1.self_center.badge {
 }
 
 .cardSize {
+  padding: 5px;
+  display: flex;
   width: 332px !important;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: grid;
+  clear: both;
+}
+
+a {
+ color: var(--linkcolor) !important;
+ text-decoration: none;
+}
+
+a:hover {
+  font-weight: bolder;
+ }
