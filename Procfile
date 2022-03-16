@@ -1,1 +1,1 @@
-web: gunicorn index:server --timeout 0
+web: python index.py
