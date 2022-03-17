@@ -80,15 +80,15 @@ layout = dbc.Container(
                 ),
             dbc.Row([
                 html.Div(className='kwtdrops', children=[
-                        "ATIVO", dcc.Dropdown( id="ticker", options=tickers, value='OIBR3.SA', clearable=False, style={'width':'30rem', 'margin':'5px'} ), 
-                        "PERÍODO", dcc.Dropdown( id="periods", options=periods, value='1y', clearable=False, style={'width':'10rem', 'margin':'5px'} ),
-                        "INTERVALO", dcc.Dropdown( id="intervals", options=intervals, value='1d', clearable=False, style={'width':'10rem', 'margin':'5px'} ),
-                        dbc.Button(id='submitb', n_clicks=0, children='Atualizar')
+                        html.H5("ATIVO"), dcc.Dropdown( id="ticker", options=tickers, value='OIBR3.SA', clearable=False, style={'width':'600px'} ), 
+                        html.H5("PERÍODO"), dcc.Dropdown( id="periods", options=periods, value='1y', clearable=False, style={'width':'10rem'} ),
+                        html.H5("INTERVALO"), dcc.Dropdown( id="intervals", options=intervals, value='1d', clearable=False, style={'width':'10rem'} ),
+                        dbc.Button(className="kwtchartbtn",id='submitb', n_clicks=0, children='Atualizar')
                 ]),
             ]),
             html.Br(),
             dbc.Row([
-                dbc.Card(dbc.CardBody(dcc.Graph(id="graph", config=config1)), style={"width": "70rem", "margin-right": "10px", "margin-bottom": "10px"}),                             
+                dbc.Card(dbc.CardBody(dcc.Graph(id="graph", config=config1)), style={"margin-right": "5px", "margin-bottom": "5px"}),                             
             ]),                      
             ], fluid=True)
 
@@ -165,7 +165,8 @@ def display(sutb, tkr, prd, itv):
 
     fig.add_trace( go.Scatter(x=df.index, y=df.Close.rolling(21).mean(), mode='lines', name='MMA21', line_color='navy')  )
     fig.add_trace( go.Scatter(x=df.index, y=df.Close.rolling(50).mean(), mode='lines', name='MMA50', line_color='orangered')  )
-    fig.add_trace( go.Scatter(x=df.index, y=df.Close.ewm(span=200, adjust=False).mean(), mode='lines', name='EWA200', line_color='purple')  )
+    fig.add_trace( go.Scatter(x=df.index, y=df.Close.ewm(span=200, min_periods=200, adjust=True).mean(), mode='lines', name='EWA200', line_color='purple')  )
+    
         
     ####### ATUALIZA LAYOUT, TRACES E AXES DOS GRÁFICOS
     #
