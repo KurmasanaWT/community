@@ -23,7 +23,7 @@ cards = dbc.Container(dbc.Row(
             dbc.CardImg(src='static/mean.png'),
             dbc.CardBody([
 
-                dbc.Button([html.I(className="fas fa-play-circle")," Executar "], id="PlayBtn001", n_cliks=0),
+                dbc.Button([html.I(className="fas fa-play-circle")," Executar "], id="PlayBtn001", n_clicks=0),
                 dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT', target="new"),
 
                 html.P("Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
