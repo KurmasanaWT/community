@@ -10,10 +10,17 @@ import pandas as pd
 from app import app 
 from app import server
 
+from codes import meanrev
+
 navbar = html.Div(className='topnav',
     children=[ 
         html.A( html.Img(src="static/logo.png", height="47"), href="../") 
     ]) 
+
+btn001 = dbc.Button(
+    id="PlayBtn001", 
+    n_clicks=0, 
+    children=[html.I(className="fas fa-play-circle")," Executar "] )
 
 cards = dbc.Container(dbc.Row(
     [
@@ -23,7 +30,8 @@ cards = dbc.Container(dbc.Row(
             dbc.CardImg(src='static/mean.png'),
             dbc.CardBody([
 
-                dbc.Button([html.I(className="fas fa-play-circle")," Executar "], id="PlayBtn001", n_clicks=0),
+                btn001,
+                
                 dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT', target="new"),
 
                 html.P("Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
@@ -161,7 +169,7 @@ sidebar = dtc.SideBar(className='sidenav',
         dtc.SideBarItem(id='id_1', label="Python Codes", icon="fab fa-python"),
         dtc.SideBarItem(id='id_2', label="A Comunidade", icon="fas fa-users"),
         dtc.SideBarItem(id='id_3', label="Sobre Nós", icon="fas fa-address-card"),
-        #dtc.SideBarItem(id='id_4', label="GitHub", icon="fab fa-github"),
+        dtc.SideBarItem(id='id_4', label="GitHub", icon="fab fa-github"),
         #dtc.SideBarItem(id='id_5', label="Twitter", icon="fab fa-twitter"),
     ])
 
@@ -198,14 +206,16 @@ app.layout=dbc.Container(
         Input("id_1", "n_clicks_timestamp"),
         Input("id_2", "n_clicks_timestamp"),
         Input("id_3", "n_clicks_timestamp"),
+        Input("id_4", "n_clicks_timestamp"),
+        #Input("PlayBtn001", "n_clicks"),
         #Input("id_4", "n_clicks_timestamp"),
         #Input("id_5", "n_clicks_timestamp")
     ]
 )
 
-def toggle_collapse(input1, input2, input3):
+def toggle_collapse(input1, input2, input3, btn001):
     btn_df = pd.DataFrame({"input1": [input1], "input2": [input2],
-                           "input3": [input3]})
+                           "input3": [input3], "input4": [btn001]})
     
     btn_df = btn_df.fillna(0)
 
@@ -215,6 +225,13 @@ def toggle_collapse(input1, input2, input3):
         return content_2
     if btn_df.idxmax(axis=1).values == "input3":
         return content_3
+    if btn_df.idxmax(axis=1).values == "input4":
+        return meanrev.get()
+    #if btn_df.idxmax(axis=1).values == "input4":
+    #    if btn001 is None:
+    #        return "Not clicked."
+    #    else:
+    #        return codes.meanrev.get()
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)

@@ -31,6 +31,10 @@
   --terciary: #0a8b4b;
 }
 
+.row {
+  --bs-gutter-x:  none; 
+}
+
 html {
   margin: 0px 0px 0px 0px !important;
   padding: 0px 0px 0px 0px !important;
@@ -88,19 +92,6 @@ a {
   display: flex;
 }
 
-.padding16.radius8 {
-  border-radius: 4px;
-}
-
-.padding16.radius8:hover {
-  box-shadow: 0px 0px 0px 2px var(--primary) !important;
-}
-
-.trich_card.dark .card .git, .card {
-  background-color: rgb(36, 36, 36) !important;
-  color: var(--primary) !important;
-}
-
 div.inline-block > span.mr-1.self_center.badge {
   background-color: var(--primary) !important;
 }
@@ -110,13 +101,23 @@ div.inline-block > span.mr-1.self_center.badge {
   background-color:  var(--primary) !important;
   border-color:  var(--primary) !important;
   margin: 5px !important;
-  padding: 1px 3px 1px 3px !important;
+  padding: 5px 5px 5px 5px !important;
   text-align: center !important;
-  vertical-align: moddle !important;  
+  vertical-align: middle !important;  
 }
 
 *.btn.btn-primary:hover {
   background-color:  var(--terciary) !important;
+}
+
+.Select {
+  color: #000 !important;
+  vertical-align: middle !important;
+  border-color:  var(--primary) !important;
+  border-radius: 5px !important;
+  border-style: none;
+  line-height: 1.5;
+  
 }
 
 .badge {
@@ -125,12 +126,21 @@ div.inline-block > span.mr-1.self_center.badge {
   margin: 2px;
 }
 
+.card {
+  background-color: rgba(200, 180, 180, 0.15) !important;
+}
+
 .cardSize {
   padding: 5px;
-  display: flex;
+  display: inline-flex;
   width: 332px !important;
   margin-right: 10px;
   margin-bottom: 10px;
+}
+
+.kwtdrops{
+  display: flow-root flex !important;
+  vertical-align: middle !important;  
 }
 
 .card-header {
