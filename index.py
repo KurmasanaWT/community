@@ -8,6 +8,7 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 
 from app import app 
+from app import server
 
 navbar = html.Div(className='topnav',
     children=[ 
@@ -22,7 +23,7 @@ cards = dbc.Container(dbc.Row(
             dbc.CardImg(src='static/mean.png'),
             dbc.CardBody([
 
-                dbc.Button([html.I(className="fas fa-play-circle")," Executar "], href='../meanreversion.py', target="new"),
+                dbc.Button([html.I(className="fas fa-play-circle")," Executar "], id="PlayBtn001", n_cliks=0),
                 dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT', target="new"),
 
                 html.P("Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
