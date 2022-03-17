@@ -19,24 +19,32 @@ navbar = html.Div(className='topnav',
         html.A( html.Img(src="static/logo.png", height="47"), href="../") 
     ]) 
 
-desc="Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo. &amp; &amp \n &#13; &#013; &lt;br&gt; \A Sponsor: <b>RAFI</b> (Twitter @RaphaFigueredo)."
-
 cards = dbc.Container(dbc.Row(
     [
      
         dbc.Card([
             dbc.CardHeader([html.H6("REVERSÃO À MÉDIA"), dbc.Badge("16/03/2022")]),
-            dbc.CardImg(src='static/mean.jpg'),
+            dbc.CardImg(src='static/mean.png'),
             dbc.CardBody([
 
-                dbc.Button(html.I(className="fas fa-play"), href='../meanreversion.py', target="new"),
-                dbc.Button(html.I(className="fab fa-github"), href='https://github.com/KurmasanaWT', target="new"),
+                dbc.Button([html.I(className="fas fa-play-circle")," Executar "], href='../meanreversion.py', target="new"),
+                dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT', target="new"),
 
                 html.P("Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
 
                 html.P([
+                    "Conteúdo adicional sobre o tópico: ", 
+                    dbc.ListGroup([
+                        dbc.ListGroupItem('Investopedia',href='https://www.investopedia.com/terms/m/meanreversion.asp', target="new"),
+                        dbc.ListGroupItem('FactSet',href='https://insight.factset.com/how-much-alpha-can-be-derived-from-a-mean-reversion-strategy', target="new"),
+                        dbc.ListGroupItem('SciELO',href='https://search.scielo.org/?fb=&q=%22mean+reversion%22&lang=pt&where=&filter%5Bin%5D%5B%5D=*', target="new"),
+                        dbc.ListGroupItem('Google Scholar',href='https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0,5&q=%22mean+reversion%22+%22stock+market%22', target="new"),
+                    ])
+                ]),
+
+                html.P([
                     "Sponsor: ", 
-                    html.A([" RAFI | ",html.I(className="fab fa-twitter"), " @RaphaFigueredo)"], href='https://twitter.com/RaphaFigueredo', target="new")
+                    html.A([" RAFI | ",html.I(className="fab fa-twitter"), " @RaphaFigueredo"], href='https://twitter.com/RaphaFigueredo', target="new")
                 ]),
 
                 dbc.Badge("Médias"),
@@ -69,7 +77,7 @@ comm_cards = dbc.Container(dbc.Row(
                 dbc.Badge("16/03/2022")
             ]),
         ], className="cardSize", ),
-      
+
       ### incluir mais cards aqui
 
     ], className='content'), fluid=True)
@@ -78,8 +86,8 @@ kwt_cards = dbc.Container(dbc.Row(
     [
         dbc.Card([
             dbc.CardHeader(html.H6("QUEM SOMOS NÓS ???")),
+            dbc.CardImg(src="static/kwt_logowide.png"),
             dbc.CardBody([
-                html.P(html.Img(src="static/logo_only.png", height="60"), style={'text-align':'center'}),
                 html.P("Nós somos parte do universo das Start-Ups, operando no espaço existente entre os experts do mercado de capitais e os geeks do eco-sistema de inovação."),
                 html.P("Somos uma WEALTHTECH."),
                 html.P("As palavras “riqueza” e “tecnologia” se juntaram para dar origem a uma nova geração de empresas de tecnologia financeira que criam soluções digitais para transformar o setor de investimentos e gestão de ativos."),
@@ -105,7 +113,6 @@ kwt_cards = dbc.Container(dbc.Row(
             dbc.CardBody([
                 html.P("Nosso ANIMAL DE PODER: A Tartaruga, afinal devagar se vai longe!"),
                 html.P("Nos ensinamentos nativos americanos, a tartaruga é o símbolo mais velho do planeta Terra. É a personificação da deusa da energia e a Mãe eterna na qual nossa vida evolui. A tartaruga é considerada para o xamã como sendo o chão ou piso da Mãe Terra. Ela, com sua lentidão e grossa carapaça, nos ensina como podemos nos proteger."),
-                html.P("Nossos Cachorros: Filomena (Genérico) e Apollo (Golden Retriever)."),
             ], style={}),
         ], className="cardSize", ),
 
@@ -116,7 +123,6 @@ kwt_cards = dbc.Container(dbc.Row(
                 html.P("Kúrmásana dêvanágari कूर्मासन IAST kūrmāsana."),
                 html.P("Em sânscrito kúrma é tartaruga. Também dá nome a uma nádí do corpo energético ou um sub-prana."),
                 html.Span("Kūrma vāyu - responsável pelo piscar dos olhos. "),
-                html.I(className="fas fa-grin-wink")
             ], style={}),
         ], className="cardSize", ),
 
@@ -158,7 +164,7 @@ sidebar = dtc.SideBar(className='sidenav',
     children=[
         dtc.SideBarItem(id='id_1', label="Python Codes", icon="fab fa-python"),
         dtc.SideBarItem(id='id_2', label="A Comunidade", icon="fas fa-users"),
-        dtc.SideBarItem(id='id_3', label="Sobre Nós", icon="fas fa-user-astronaut"),
+        dtc.SideBarItem(id='id_3', label="Sobre Nós", icon="fas fa-address-card"),
         #dtc.SideBarItem(id='id_4', label="GitHub", icon="fab fa-github"),
         #dtc.SideBarItem(id='id_5', label="Twitter", icon="fab fa-twitter"),
     ])
@@ -170,7 +176,7 @@ main_content = html.Div([
 
 alert=html.Div(
     dbc.Alert(
-        "*** VERSÃO BETA - 20220315 ***",
+        "*** VERSÃO BETA - 20220317 ***",
         id="alert-fade",
         dismissable=True,
         is_open=True,
@@ -201,10 +207,9 @@ app.layout=dbc.Container(
     ]
 )
 
-def toggle_collapse(input1, input2, input3):#, input4, input5):
+def toggle_collapse(input1, input2, input3):
     btn_df = pd.DataFrame({"input1": [input1], "input2": [input2],
-                           "input3": [input3]})#, "input4": [input4], 
-                           #"input5": [input5]})
+                           "input3": [input3]})
     
     btn_df = btn_df.fillna(0)
 
@@ -214,16 +219,6 @@ def toggle_collapse(input1, input2, input3):#, input4, input5):
         return content_2
     if btn_df.idxmax(axis=1).values == "input3":
         return content_3
-    #if btn_df.idxmax(axis=1).values == "input4":
-    #    return html.Div([
-    #        content_1,
-    #        #dcc.Link(href='https://github.com/KurmasanaWT')
-    #    ])
-    #if btn_df.idxmax(axis=1).values == "input5":
-    #    return html.Div([
-    #        content_1,
-    #        #dcc.Location(href='https://twitter.com/KurmasanaWT', refresh=True)
-    #    ])
 
 if __name__ == '__main__':
     app.run_server(debug=True)

@@ -8,6 +8,12 @@
   --terciary: #0a0 !important;
   --linkcolor: #0a0 !important;
   --altbgColor: rgba(200, 130, 90, 0.4) !important;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -30,7 +36,7 @@ html {
   padding: 0px 0px 0px 0px !important;
   font-size: 14px;
   text-align: left;
-  color: primary;
+  color: var(--primary);
   text-decoration: none;
 } 
 
@@ -73,6 +79,10 @@ a {
   text-decoration: none;
 }
 
+.sidenav:hover {
+  color: var(--linkcolor) !important;
+}
+
 .content {
   padding-top:20px;
   display: flex;
@@ -100,6 +110,9 @@ a.btn.btn-primary {
   background-color:  var(--primary) !important;
   border-color:  var(--primary) !important;
   margin: 5px !important;
+  padding: 1px 3px 1px 3px !important;
+  text-align: center !important;
+  vertical-align: moddle !important;  
 }
 
 a.btn.btn-primary:hover {
@@ -124,4 +137,14 @@ a.btn.btn-primary:hover {
   text-align:center;
   color: var(--terciary);
   font-weight:bolder;
+}
+
+.list-group-item {
+	position: relative;
+	display: block;
+	padding: 0px;
+	color: rgba(200, 180, 180, 1);
+	text-decoration: none;
+	background-color: rgba(0,0,0,.125);
+	border: 1px solid rgba(200, 180, 180, 0.25);
 }
