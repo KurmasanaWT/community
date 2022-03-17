@@ -26,14 +26,14 @@ cards = dbc.Container(dbc.Row(
     [
      
         dbc.Card([
-            dbc.CardHeader([html.H6("REVERSÃO À MÉDIA"), dbc.Badge("16/03/2022")]),
+            dbc.CardHeader([html.H6("REVERSÃO À MÉDIA"), dbc.Badge("Versão Beta 2022-001")]),
             #dbc.CardImg(src='static/mean.png'),
             meanrev.get(),
             dbc.CardBody([
 
                 #btn001,
                 
-                dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT/community/blob/main/codes/meanrev.py', target="new"),
+                html.P(dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT/community/blob/main/codes/meanrev.py', target="new")),
 
                 html.P("Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
 
