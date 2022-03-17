@@ -62,6 +62,7 @@ config1 = {
 tickers = pd.read_csv('db/tickers.csv', delimiter=';') # ativos da na bolsa brasileira
 tickers['label'] = tickers['value']+" - "+tickers['label']
 tickers['value'] = tickers['value']+".SA"
+tickers=tickers.append({'value':'^BVSP','label':'^BVSP - Índice iBovespa'}, ignore_index=True)
 tickers = tickers.to_dict('records')
 
 periods = pd.read_csv('db/periods.csv', delimiter=';').to_dict('records') # períodos de análise
@@ -81,7 +82,7 @@ layout = dbc.Container(
                 ),
             dbc.Row([
                 html.Div(className='kwtdrops', children=[
-                        html.H5("ATIVO"), dcc.Dropdown( id="ticker", options=tickers, value='OIBR3.SA', clearable=False, style={'width':'600px'} ), 
+                        html.H5("ATIVO"), dcc.Dropdown( id="ticker", options=tickers, value='^BVSP', clearable=False, style={'width':'600px'} ), 
                         html.H5("PERÍODO"), dcc.Dropdown( id="periods", options=periods, value='1y', clearable=False, style={'width':'10rem'} ),
                         html.H5("INTERVALO"), dcc.Dropdown( id="intervals", options=intervals, value='1d', clearable=False, style={'width':'10rem'} ),
                         dbc.Button(className="kwtchartbtn",id='submitb', n_clicks=0, children='Atualizar')
