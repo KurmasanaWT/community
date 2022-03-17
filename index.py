@@ -7,12 +7,7 @@ import dash_trich_components as dtc
 from dash.dependencies import Input, Output, State
 import pandas as pd
 
-#from app import app 
-
-app = dash.Dash(__name__, suppress_callback_exceptions=False, title='KWT-Community', external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME])
-server = app.server   
-
-#theme_toggle = dtc.ThemeToggle()
+from app import app 
 
 navbar = html.Div(className='topnav',
     children=[ 
@@ -221,4 +216,4 @@ def toggle_collapse(input1, input2, input3):
         return content_3
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
