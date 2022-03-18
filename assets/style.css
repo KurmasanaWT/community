@@ -33,7 +33,7 @@
 
 *, ::after, ::before {
 	/* box-sizing: border-box; */
-  --bs-gutter-x:  none; 
+  /*--bs-gutter-x:  none; */
 }
 
 .row {
@@ -143,6 +143,18 @@ div.inline-block > span.mr-1.self_center.badge {
   background-color: rgba(200, 180, 180, 0.15) !important;
 }
 
+.card-header {
+  text-align:center;
+  color: var(--terciary);
+  font-weight:bolder;
+}
+
+.card-header-sub {
+  text-align:center;
+  color: var(--primary);
+  font-weight:normal;
+}
+
 .cardSize {
   padding: 5px;
   display: inline-flex;
@@ -161,6 +173,7 @@ div.inline-block > span.mr-1.self_center.badge {
   /*width: 332px !important;*/
   width:fit-content;
   height:fit-content;
+  /*overflow-y:scroll;*/
   max-width:720px;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -181,12 +194,6 @@ div.inline-block > span.mr-1.self_center.badge {
   padding: 0px !important;
   margin: 0px !important;
   border: 0px !important;  
-}
-
-.card-header {
-  text-align:center;
-  color: var(--terciary);
-  font-weight:bolder;
 }
 
 .list-group-item {
