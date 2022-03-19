@@ -14,7 +14,7 @@ from codes import meanrev
 
 navbar = html.Div(className='topnav',
     children=[ 
-        html.A( html.Img(src="static/logo.png", height="47"), href="../") 
+        html.A( html.Img(src="static/logo.png", height="30"), href="../") 
     ]) 
 
 btn001 = dbc.Button(
@@ -185,13 +185,14 @@ main_content = html.Div([
 
 alert=html.Div(
     dbc.Alert(
-        "*** VERSÃO BETA - 20220317 ***",
-        id="alert-fade",
+        id="alert-beta",
+        className="alerts",
+        children="*** VERSÃO BETA - 20220317 ***",
         dismissable=True,
         is_open=True,
+        fade=True,
         duration=4000
-    ),
-    style={'text-align':'center'})
+    ))
 
 content_1 = html.Div( [cards] )
 content_2 = html.Div( [comm_cards] )
@@ -200,7 +201,7 @@ content_3 = html.Div( [kwt_cards] )
 app.layout=dbc.Container(
     children=[
         alert,
-        dbc.Row(className='Top', children=[navbar], style={'width':'100%', 'background-color':'#000'}),
+        dbc.Row(className='Top', children=[navbar], style={'width':'100%', }),
         dbc.Row(className='Main', children=[main_content]),
     ], fluid=True)
             

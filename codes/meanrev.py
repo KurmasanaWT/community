@@ -73,12 +73,14 @@ intervals = pd.read_csv('db/intervals.csv', delimiter=';').to_dict('records') # 
 layout = dbc.Container(
         children=[
             dcc.Loading(
+                #className="kwtload",
                 id="load_o1",
-                color='#ff9800',
-                style={'vertical-align':'bottom'},
-                parent_style={'vertical-align':'bottom'},
-                children=html.Span(id="load_o1"),
-                type="dot",
+                color='#0a0',
+                style={'background-color':'rgba(0, 0, 0, 0.5)'},
+                parent_style={},
+                fullscreen=True,
+                children=html.Span(id="load_o1", children=["LOADING..."]),
+                type="default",
                 ),
             dbc.Row([
                 html.Div(className='kwtdrops', children=[
@@ -90,9 +92,9 @@ layout = dbc.Container(
             ]),
             html.Br(),
             dbc.Row([
-                dbc.Card(dbc.CardBody(dcc.Graph(id="graph", config=config1)), style={"margin-right": "5px", "margin-bottom": "5px"}),                             
-                dbc.Card(dbc.CardBody(dcc.Graph(id="graph1", config=config1)), style={"margin-right": "5px", "margin-bottom": "5px"}),                             
-                dbc.Card(dbc.CardBody(dcc.Graph(id="graph2", config=config1)), style={"margin-right": "5px", "margin-bottom": "5px"}),                             
+                dcc.Graph(id="graph", config=config1),                             
+                dcc.Graph(id="graph1", config=config1),
+                dcc.Graph(id="graph2", config=config1),                             
             ]),                      
             ], fluid=True)
 

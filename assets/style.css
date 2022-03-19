@@ -1,7 +1,7 @@
 /* colors variables settings */
  
 :root {
-  --bgColor: rgb(0, 0, 0);
+  --bgColor: rgb(39, 39, 39);
   --textDefault: rgb(255, 255, 255);
   --primary: rgba(200, 180, 180, 1) !important;
   --secondary: #7fb48c !important;
@@ -11,7 +11,7 @@
   --success: #28a745;
   --info: #17a2b8;
   --warning: #ffc107;
-  --danger: #dc3545;
+  --danger: #ff0000;
   --light: #f8f9fa;
   --dark: #343a40;
   --breakpoint-xs: 0;
@@ -32,7 +32,7 @@
 }
 
 *, ::after, ::before {
-	/* box-sizing: border-box; */
+	box-sizing: border-box;
   /*--bs-gutter-x:  none; */
 }
 
@@ -55,6 +55,11 @@ body {
   background-color: var(--bgColor);
   color: var(--primary);
   text-decoration: none;
+  /* background-image: url("../static/bkg_img.jpg");
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-attachment: fixed;
+  background-size:cover; */
 }
 
 a {
@@ -64,7 +69,7 @@ a {
  
  a:hover, h6 {
   color: var(--linkcolor);
-  font-weight: bolder;
+  /*font-weight: bolder;*/
   }
 
 h5 {
@@ -72,28 +77,80 @@ h5 {
   font-size: 14px;
   text-align: left;
   vertical-align: top;
-  
   padding: 10px;
   }
 
+h6 {
+  color: var(--linkcolor);
+  font-size: 16px;
+  padding: 0px;
+  }
+
+.social {
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  background-color: transparent !important;
+  z-index:5;
+}
+
+.kwtload {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  background-color: transparent !important;
+}
+
+/* 
+.dash-spinner {
+  background-image: url("http://i.stack.imgur.com/SBv4T.gif");
+  background-size: contain;
+  background-repeat: repeat;
+}
+
+.dash-spinner * {
+  display: none !important;
+}
+*/
+
+.alerts {
+  position: absolute;
+  top: 5px;
+  width:300px;
+  right: calc(50% - 150px);
+  z-index: 10 !important;
+  border:0px;
+  font-weight: bold;
+  text-align: center;
+  color:black;
+  background-color: var(--warning);
+}
+
 .topnav {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  z-index: 5;
   margin: 0px 0px 0px 0px ;
-  padding: 9px 10px 8px 10px;
-  background-color: transparent;
+  padding: 15px 15px 15px 15px;
+  background-color: rgba(0, 0, 0, 0.5) !important;
   text-decoration: none;
   display: block;
-  position: sticky;
   text-align: right;
   justify-content: right;
-  width: 100%
+  width: 100%;
+  box-shadow: 0px 2px 4px black;
 }
 
 .sidenav {
+  position: fixed;
   margin: 0px 0px 0px 0px ;
-  padding: 0px 0px 0px 0px ;
+  padding: 55px 0px 0px 0px ;
   background-color: rgba(0, 0, 0, 0.5) !important;
   color: var(--primary);
   text-decoration: none;
+  z-index:4 !important;
 }
 
 .sidenav:hover {
@@ -101,8 +158,9 @@ h5 {
 }
 
 .content {
-  padding-top:20px;
+  padding-top:65px;
   display: flex;
+  
 }
 
 div.inline-block > span.mr-1.self_center.badge {
@@ -130,7 +188,6 @@ div.inline-block > span.mr-1.self_center.badge {
   border-radius: 5px !important;
   border-style: none;
   line-height: 1.5;
-  
 }
 
 .badge {
@@ -139,20 +196,42 @@ div.inline-block > span.mr-1.self_center.badge {
   margin: 2px;
 }
 
+.container-fluid {
+  padding: 10px;
+}
+
 .card {
-  background-color: rgba(200, 180, 180, 0.15) !important;
+  padding: 0px 0px 0px 0px  !important;
+  background-color: rgba(200, 180, 180, 0.10) !important;
+  box-shadow: 0px 2px 3px black; 
 }
 
 .card-header {
+  margin: 0px 0px 0px 0px  !important;
   text-align:center;
+  vertical-align: middle !important;  
   color: var(--terciary);
-  font-weight:bolder;
+  background-color:  rgb(34, 33, 33) !important;
+  border-bottom: 2px white;
 }
 
 .card-header-sub {
   text-align:center;
   color: var(--primary);
   font-weight:normal;
+}
+
+.card-img {
+  margin: 10px 0px 0px 0px  !important;
+}
+
+.card-body {
+  padding: 10px !important;
+}
+
+.dash-graph {
+  margin: 1px !important;
+  box-shadow: 0px 2px 3px black;
 }
 
 .cardSize {
@@ -178,7 +257,6 @@ div.inline-block > span.mr-1.self_center.badge {
   margin-right: 10px;
   margin-bottom: 10px;
 }
-
 
 .kwtdrops{
   display: contents !important;
