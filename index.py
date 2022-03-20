@@ -53,47 +53,6 @@ cards = dbc.Container(dbc.Row(
                 ]),
 
                 html.P([
-                    "Sponsor: ", 
-                    html.A([" RAFI | ",html.I(className="fab fa-twitter"), " @RaphaFigueredo"], href='https://twitter.com/RaphaFigueredo', target="new")
-                ]),
-
-                dbc.Badge("Médias"),
-                dbc.Badge("FinTwit"),
-                dbc.Badge("RAFI"),
-
-            ], style={'text-align':'center', 'justify-content':'center'}),
-        ], className="cardSize-code", ),
-     
-        '''
-        ### MOSAIC
-        dbc.Card([
-            dbc.CardHeader([html.H6("REVERSÃO À MÉDIA"), 
-            html.Span(className='card-header-sub', children="Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
-            html.Br(),
-            dbc.Badge("Versão Beta 2022-001")]),
-            html.Br(),
-            
-            returnlog.get(), ############## IMPORTANT
-            
-            dbc.CardBody([
-
-                #btn001,
-                
-                html.P(dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT/community/blob/main/codes/meanrev.py', target="new")),
-
-                #html.P("Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
-
-                html.P([
-                    "Conteúdo adicional sobre o tema: ", 
-                    dbc.ListGroup([
-                        dbc.ListGroupItem('Investopedia',href='https://www.investopedia.com/terms/m/meanreversion.asp', target="new"),
-                        dbc.ListGroupItem('FactSet',href='https://insight.factset.com/how-much-alpha-can-be-derived-from-a-mean-reversion-strategy', target="new"),
-                        dbc.ListGroupItem('SciELO',href='https://search.scielo.org/?fb=&q=%22mean+reversion%22&lang=pt&where=&filter%5Bin%5D%5B%5D=*', target="new"),
-                        dbc.ListGroupItem('Google Scholar',href='https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0,5&q=%22mean+reversion%22+%22stock+market%22', target="new"),
-                    ])
-                ]),
-
-                html.P([
                     "Tema sugerido por : ", 
                     html.A([" RAFI | ",html.I(className="fab fa-twitter"), " @RaphaFigueredo"], href='https://twitter.com/RaphaFigueredo', target="new")
                 ]),
@@ -104,7 +63,6 @@ cards = dbc.Container(dbc.Row(
 
             ], style={'text-align':'center', 'justify-content':'center'}),
         ], className="cardSize-code", ),
-        '''
      
       ### incluir mais cards aqui
 
