@@ -10,7 +10,7 @@ import pandas as pd
 from app import app 
 from app import server
 
-from codes import meanrev
+from codes import meanrev, mosaic
 
 navbar = html.Div(className='topnav',
     children=[ 
@@ -31,8 +31,9 @@ cards = dbc.Container(dbc.Row(
             html.Br(),
             dbc.Badge("Versão Beta 2022-001")]),
             html.Br(),
-            #dbc.CardImg(src='static/mean.png'),
-            meanrev.get(),
+            
+            meanrev.get(), ############## IMPORTANT
+            
             dbc.CardBody([
 
                 #btn001,
@@ -169,12 +170,25 @@ kwt_cards = dbc.Container(dbc.Row(
 
     ], className='content'), fluid=True)
 
+mosaic = dbc.Container(dbc.Row(
+    [
+        dbc.Card([
+            dbc.CardHeader("WORLD NEWS COVERAGE", style={'text-align':'center'}),
+            dbc.CardBody([
+                mosaic.get(),
+            ]),
+        ], className="cardSize-vidbkg" ),
+
+      ### incluir mais cards aqui
+
+    ], className='content'), fluid=True)
+
 sidebar = dtc.SideBar(className='sidenav',
     children=[
         dtc.SideBarItem(id='id_1', label="Python Codes", icon="fab fa-python"),
         dtc.SideBarItem(id='id_2', label="A Comunidade", icon="fas fa-users"),
         dtc.SideBarItem(id='id_3', label="Sobre Nós", icon="fas fa-address-card"),
-        #dtc.SideBarItem(id='id_4', label="GitHub", icon="fab fa-github"),
+        dtc.SideBarItem(id='id_4', label="World News (Beta)", icon="fas fa-video"),
         #dtc.SideBarItem(id='id_5', label="Twitter", icon="fab fa-twitter"),
     ])
 
@@ -197,6 +211,7 @@ alert=html.Div(
 content_1 = html.Div( [cards] )
 content_2 = html.Div( [comm_cards] )
 content_3 = html.Div( [kwt_cards] )
+content_4 = html.Div( [mosaic] )
 
 app.layout=dbc.Container(
     children=[
@@ -212,16 +227,16 @@ app.layout=dbc.Container(
         Input("id_1", "n_clicks_timestamp"),
         Input("id_2", "n_clicks_timestamp"),
         Input("id_3", "n_clicks_timestamp"),
-        #Input("id_4", "n_clicks_timestamp"),
+        Input("id_4", "n_clicks_timestamp"),
         #Input("PlayBtn001", "n_clicks"),
         #Input("id_4", "n_clicks_timestamp"),
         #Input("id_5", "n_clicks_timestamp")
     ]
 )
 
-def toggle_collapse(input1, input2, input3):
+def toggle_collapse(input1, input2, input3, input4):
     btn_df = pd.DataFrame({"input1": [input1], "input2": [input2],
-                           "input3": [input3]}) #, "input4": [btn001]})
+                           "input3": [input3], "input4": [input4]})
     
     btn_df = btn_df.fillna(0)
 
@@ -231,8 +246,8 @@ def toggle_collapse(input1, input2, input3):
         return content_2
     if btn_df.idxmax(axis=1).values == "input3":
         return content_3
-    #if btn_df.idxmax(axis=1).values == "input4":
-    #   return meanrev.get()
+    if btn_df.idxmax(axis=1).values == "input4":
+        return content_4
     #if btn_df.idxmax(axis=1).values == "input4":
     #    if btn001 is None:
     #        return "Not clicked."

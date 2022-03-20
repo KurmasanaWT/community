@@ -62,6 +62,13 @@ body {
   background-size:cover; */
 }
 
+iframe, *.iframe, .ytvid {
+  margin: 0px 0px 0px 0px !important;
+  padding: 0px 0px 0px 0px !important;
+  border: 0 !important;
+  display: inline-flex;
+}
+
 a {
   color: var(--linkcolor);
   text-decoration: none;
@@ -206,13 +213,13 @@ div.inline-block > span.mr-1.self_center.badge {
   box-shadow: 0px 2px 3px black; 
 }
 
-.card-header {
+*.card-header {
   margin: 0px 0px 0px 0px  !important;
+
   text-align:center;
   vertical-align: middle !important;  
   color: var(--terciary);
   background-color:  rgb(34, 33, 33) !important;
-  border-bottom: 2px white;
 }
 
 .card-header-sub {
@@ -242,8 +249,7 @@ div.inline-block > span.mr-1.self_center.badge {
   height:fit-content;
   max-width:360px;
   min-height:360px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin: 0px 15px 15px 0px;
 }
 
 .cardSize-code {
@@ -256,6 +262,34 @@ div.inline-block > span.mr-1.self_center.badge {
   max-width:720px;
   margin-right: 10px;
   margin-bottom: 10px;
+}
+
+.cardSize-vid {
+  padding: 0px !important;
+  margin: 0px 15px 15px 0px;
+  display: inline-flex;
+  width:fit-content;
+  height:fit-content;
+}
+
+.cardSize-vid .card-header{
+  color: var(--primary) !important;
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px !important;
+}
+
+.cardSize-vid .card-body {
+  text-align: left;
+  padding: 0px !important;
+}
+
+.cardSize-vidbkg {
+  padding: 0px !important;
+  margin: 0px;
+  display: inline-flex;
+  width:100%;
+  height:fit-content;
 }
 
 .kwtdrops{
