@@ -13,7 +13,7 @@
   --warning: #ffc107;
   --danger: #ff0000;
   --light: #f8f9fa;
-  --dark: #343a40;
+  --dark: #161111;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -202,6 +202,13 @@ div.inline-block > span.mr-1.self_center.badge {
   background-color: var(--primary) !important;
   margin: 2px;
 }
+
+.badge-link {
+  color: var(--primary) !important;
+  background-color: var(--dark) !important;
+  margin: 2px;
+}
+
 
 .container-fluid {
   padding: 10px;
