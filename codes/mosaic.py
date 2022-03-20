@@ -8,42 +8,42 @@ layout = dbc.Container(
 
         dbc.Card([
             dbc.CardHeader("EURONEWS (União Européia)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/sPgqEHsONK8?&autoplay=1&mute=1")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/sPgqEHsONK8?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),
 
         dbc.Card([
             dbc.CardHeader("SKY NEWS (Reino Unido)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/9Auq9mYxFEE?&autoplay=1&mute=1")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/9Auq9mYxFEE?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),    
 
         dbc.Card([
             dbc.CardHeader("FRANCE 24 (França)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/jNhh-OLzWlE?&autoplay=1&mute=1")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/jNhh-OLzWlE?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),
 
         dbc.Card([
             dbc.CardHeader("DEUTSCH WELLE (Alemanha)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/V9KZGs1MtP4?&autoplay=1&mute=1")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/V9KZGs1MtP4?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),
 
         dbc.Card([
             dbc.CardHeader("RT (Rússia)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://odysee.com/$/embed/RTlivestream/8c06ebe369b6ecf6ad383e4a32bfca34c0168d79?r=RfLjh5uDhbZHt8SDkQFdZyKTmCbSCpWH&autoplay=1&mute=1")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://odysee.com/$/embed/RTlivestream/8c06ebe369b6ecf6ad383e4a32bfca34c0168d79?r=RfLjh5uDhbZHt8SDkQFdZyKTmCbSCpWH&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),
  
          dbc.Card([
             dbc.CardHeader("TRT WORLD (Turquia)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/CV5Fooi8YJA?&autoplay=1&mute=1")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/CV5Fooi8YJA?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),
 
         dbc.Card([
             dbc.CardHeader("AL JAZEERA (Catar)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/-upyPouRrB8?&autoplay=1&mute=1")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/-upyPouRrB8?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),
   
         dbc.Card([
             dbc.CardHeader("CGTN EUROPE (China)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/9Y-LKliWJ4U?&autoplay=1&mute=1")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/9Y-LKliWJ4U?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),     
 
         html.Div(dbc.Badge(children=[
