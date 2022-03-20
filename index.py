@@ -10,7 +10,7 @@ import pandas as pd
 from app import app 
 from app import server
 
-from codes import meanrev, mosaic, returnlog
+from codes import meanrev, mosaic #returnlog
 
 navbar = html.Div(className='topnav',
     children=[ 
