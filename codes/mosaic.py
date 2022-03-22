@@ -62,8 +62,8 @@ layout = dbc.Container(
             ], className="cardSize-vid"),     
 
         dbc.Card([
-            #dbc.CardHeader("CNN BRASIL (Brasil)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/iGac--0Jbyw?&autoplay=1&mute=1", allow="fullscreen")]),
+            #dbc.CardHeader("WEBCAM UCRÂNIA (Ao Vivo)"),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/e2gC37ILQmk?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),     
 
         html.Div(dbc.Badge(children=[
