@@ -201,7 +201,7 @@ alert=html.Div(
     dbc.Alert(
         id="alert-beta",
         className="alerts",
-        children="*** VERSÃO BETA - 20220317 ***",
+        children="*** VERSÃO BETA - 20220322 ***",
         dismissable=True,
         is_open=True,
         fade=True,
