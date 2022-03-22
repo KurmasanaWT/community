@@ -17,6 +17,43 @@ navbar = html.Div(className='topnav',
         html.A( html.Img(src="static/logo.png", height="30"), href="../") 
     ]) 
 
+comm_cards = dbc.Container(dbc.Row(
+    [
+        dbc.Card([
+            dbc.CardHeader(html.Img(src="static/logo.png", height="30"), style={'text-align':'center'}),
+            dbc.CardBody([
+                html.P("Bem vindo!"),
+                html.P([
+                    html.Span("Este é o "),
+                    html.P("Kurmasana Wealth Tech Community hub.", style={'color':'#0a0', 'font-weight':'bolder'})
+                    ], style={'text-align':'center'}),
+                html.P("Como forma de contribuir para o desenvolvimento do mercado de capitais no Brasil, decidimos colaborar mais ativamente com a comunidade, desenvolvendo e publicando gratuitamente códigos em Python a partir de sugestões de especialistas em finanças e economia."),
+                html.P("As primeiras sugestões já estão chegando e em breve vamos disponibilizá-las gratuitamente para todos!"),
+                html.P("Notícias e anúncios serão publicados nessa seção do site. Não deixe de visitá-la frequentemente."),
+
+                html.P([
+                    "Siga a KWT no ", 
+                    html.A(
+                        [html.I(className="fab fa-twitter"), " Twitter"], 
+                        href='https://twitter.com/KurmasanaWT', 
+                        target="new"),
+                    " ou no ", 
+                    html.A(
+                        [html.I(className="fab fa-github")," GitHub"], 
+                        href='https://github.com/KurmasanaWT', 
+                        target="new")
+                    ]),
+
+                html.P("Ficaremos muito felizes com suas observações e contribuições."),
+                html.P("Um abraço!", style={'text-align':'right'}),
+                dbc.Badge("16/03/2022")
+            ]),
+        ], className="cardSize", ),
+
+      ### incluir mais cards aqui
+
+    ], className='content'), fluid=True)
+
 cards = dbc.Container(dbc.Row(
     [
      
@@ -66,23 +103,20 @@ cards = dbc.Container(dbc.Row(
 
     ], className='content'), fluid=True)
 
-comm_cards = dbc.Container(dbc.Row(
+home_cards = dbc.Container(dbc.Row(
     [
         dbc.Card([
             dbc.CardHeader(html.Img(src="static/logo.png", height="30"), style={'text-align':'center'}),
             dbc.CardBody([
-                html.P("Bem vindo!"),
-                html.P([
-                    html.Span("Este é o "),
-                    html.P("Kurmasana Wealth Tech Community hub.", style={'color':'#0a0', 'font-weight':'bolder'})
-                    ], style={'text-align':'center'}),
-                html.P("Como forma de contribuir para o desenvolvimento do mercado de capitais no Brasil, decidimos colaborar mais ativamente com a comunidade, desenvolvendo e publicando gratuitamente códigos em Python a partir de sugestões de especialistas em finanças e economia."),
-                html.P("As primeiras sugestões já estão chegando e em breve vamos disponibilizá-las gratuitamente para todos!"),
-                html.P("Notícias e anúncios serão publicados nessa seção do site. Não deixe de visitá-la frequentemente."),
+              
+                html.P("A idéia aqui é democratizar o conhecimento e unir forças."),
+                html.P("Nós acreditamos na capacidade de ir mais longe juntos, de exergar em grupo algo que nunca veríamos sozinhos."),
+                html.P("Acreditamos no potencial ilimitado da inteligência e creatividade humanas."),
+                html.P("Na força e simplicidade de um objetivo comum."),
+                html.P("Se vocÊ é um especialista do mercado financeiro, um desenvolvedor Python ou alguém interessado na união do mundo das finanças com a tecnologia, junte-se a nós!"),
                 html.P(["Siga a KWT no ", html.A([html.I(className="fab fa-twitter"), " Twitter"], href='https://twitter.com/KurmasanaWT', target="new")," ou no ", html.A([html.I(className="fab fa-github")," GitHub"], href='https://github.com/KurmasanaWT', target="new")]),
-                html.P("Ficaremos muito felizes com suas observações e contribuições."),
-                html.P("Um abraço!", style={'text-align':'right'}),
-                dbc.Badge("16/03/2022")
+                html.P(["Se achar melhor, entre em contato por email:", html.Br(),html.A([" kwt-community@1971ventures.com"], href='mailto:kwt-community@1971ventures.com', target="new")]),
+                dbc.Badge("22/03/2022")
             ]),
         ], className="cardSize", ),
 
@@ -101,7 +135,7 @@ kwt_cards = dbc.Container(dbc.Row(
                 html.P("As palavras “riqueza” e “tecnologia” se juntaram para dar origem a uma nova geração de empresas de tecnologia financeira que criam soluções digitais para transformar o setor de investimentos e gestão de ativos."),
                 html.P([
                     dbc.Badge("WealthTech"),
-                    dbc.Badge("Artificiall Intelligence"),
+                    dbc.Badge("Artificial Intelligence"),
                     dbc.Badge("Machine Learning"),
                 ], style={'text-align':'center'}),
             ], style={}),
@@ -116,6 +150,18 @@ kwt_cards = dbc.Container(dbc.Row(
                 html.Li([html.B("TRANSFORMAÇÃO"), " : Nossas soluções devem diminuir o gap entre o especialista em finanças e o especialista em tecnologia."]),
             ], style={}),
         ], className="cardSize", ),
+
+        dbc.Card([
+            dbc.CardHeader(html.H6("INVESTIDORES")),
+            dbc.CardImg(src="static/1971v.png"),
+            dbc.CardBody([
+                html.P("A KURMASANA WEALTHTECH faz parte do portfolio de investimentos da 1971 VENTURES."),
+                html.P([
+                    dbc.Badge("1971 Ventures"),
+                    dbc.Badge("Venture Capital"),
+                ], style={'text-align':'center'}),
+            ], style={}),
+        ], className="cardSize", )
 
       ### incluir mais cards aqui
 
@@ -160,7 +206,7 @@ alert=html.Div(
         duration=4000
     ))
 
-content_0 = html.Div( "" )
+content_0 = html.Div( [home_cards] )
 content_1 = html.Div( [cards] )
 content_2 = html.Div( [comm_cards] )
 content_3 = html.Div( [kwt_cards] )
