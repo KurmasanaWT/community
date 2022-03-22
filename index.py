@@ -29,7 +29,7 @@ cards = dbc.Container(dbc.Row(
             dbc.CardHeader([html.H6("REVERSÃO À MÉDIA"), 
             html.Span(className='card-header-sub', children="Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
             html.Br(),
-            dbc.Badge("Versão Beta 2022-001")]),
+            dbc.Badge("Versão Beta 2022-002")]),
             html.Br(),
             
             meanrev.get(), ############## IMPORTANT
@@ -173,7 +173,7 @@ kwt_cards = dbc.Container(dbc.Row(
 mosaic = dbc.Container(dbc.Row(
     [
         dbc.Card([
-            dbc.CardHeader("WORLD NEWS COVERAGE", style={'text-align':'center'}),
+            #dbc.CardHeader("WORLD NEWS COVERAGE", style={'text-align':'center'}),
             dbc.CardBody([
                 mosaic.get(),
             ]),

@@ -273,7 +273,7 @@ div.inline-block > span.mr-1.self_center.badge {
 
 .cardSize-vid {
   padding: 0px !important;
-  margin: 0px 15px 15px 0px;
+  margin: 0px 0px 0px 0px;
   display: inline-flex;
   width:fit-content;
   height:fit-content;
@@ -297,6 +297,7 @@ div.inline-block > span.mr-1.self_center.badge {
   display: inline-flex;
   width:100%;
   height:fit-content;
+  text-align: center;
 }
 
 .kwtdrops{

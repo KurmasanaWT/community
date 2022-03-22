@@ -62,11 +62,7 @@ config1 = {
 tickers = pd.read_csv('db/tickers.csv', delimiter=';') # ativos da na bolsa brasileira
 tickers['label'] = tickers['value']+" - "+tickers['label']
 tickers['value'] = tickers['value']+".SA"
-
-other = pd.read_csv('db/other.csv', delimiter=';') # outros ativos e índices
-other['label'] = other['value']+" - "+other['label']
-
-tickers=pd.concat([tickers,other])
+tickers=tickers.append({'value':'^BVSP','label':'^BVSP - Índice iBovespa'}, ignore_index=True)
 tickers = tickers.to_dict('records')
 
 periods = pd.read_csv('db/periods.csv', delimiter=';').to_dict('records') # períodos de análise
@@ -78,12 +74,12 @@ layout = dbc.Container(
         children=[
             dcc.Loading(
                 #className="kwtload",
-                id="load_o1",
+                id="load_o2",
                 color='#0a0',
                 style={'background-color':'rgba(0, 0, 0, 0.5)'},
                 parent_style={},
                 fullscreen=True,
-                children=html.Span(id="load_o1", children=["LOADING..."]),
+                children=html.Span(id="load_o2", children=["LOADING..."]),
                 type="default",
                 ),
             dbc.Row([
@@ -96,9 +92,9 @@ layout = dbc.Container(
             ]),
             html.Br(),
             dbc.Row([
-                dcc.Graph(id="graph", config=config1),                             
-                dcc.Graph(id="graph1", config=config1),
-                dcc.Graph(id="graph2", config=config1),                             
+                dcc.Graph(id="rlog_graph", config=config1),                             
+                dcc.Graph(id="rlog_graph1", config=config1),
+                dcc.Graph(id="rlog_graph2", config=config1),                             
             ]),                      
             ], fluid=True)
 
@@ -111,10 +107,10 @@ def get():
 #
 @app.callback(
 
-    [ Output("graph", "figure"),
-    Output("graph1", "figure"),
-    Output("graph2", "figure"),
-    Output("load_o1", "children") ],
+    [ Output("rlog_graph", "figure"),
+    Output("rlog_graph1", "figure"),
+    Output("rlog_graph2", "figure"),
+    Output("load_o2", "children") ],
 
     [ Input('submitb', 'n_clicks') ],
 
@@ -137,6 +133,13 @@ def display(sutb, tkr, prd, itv):
     df.fillna( method ='ffill', inplace = True)
     df.fillna( method ='bfill', inplace = True)
 
+    df['Rdd'] = (np.log(df.Close / df.Close.shift(1)))*100 #retorno diário percentual
+    df['R21dd'] = (np.log(df.Close / df.Close.shift(21)))*100 #retorno diário percentual
+    df['R50dd'] = (np.log(df.Close / df.Close.shift(50)))*100 #retorno diário percentual
+    df['R200dd'] = (np.log(df.Close / df.Close.shift(200)))*100 #retorno diário percentual
+
+    '''
+
     ### REVERSÃO À MÉDIA ARITIMÉTICA DE 21 DIAS
     per21dd=21
     df['CSMA21dd']=df.Close.rolling(per21dd).mean()
@@ -155,7 +158,6 @@ def display(sutb, tkr, prd, itv):
     df['REMA200dd']=((df.Close/df['CEMA200dd'])-1)*100
     df["REMA200dd_Color"] = np.where(df.REMA200dd < 0, 'red', 'green')
 
-    '''
     df['PrevClose']=df.Close.shift(1)
     df['VarClose']=((df.Close - df.Close.shift(1))/df.Close.shift(1))*100
     df['VarOpen']=((df.Open - df.Open.shift(1))/df.Open.shift(1))*100
@@ -184,21 +186,18 @@ def display(sutb, tkr, prd, itv):
     ####### CONSTROI GRÁFICOS
     #
     fig = go.Figure()  
-    fig.add_trace( go.Candlestick ( 
-        x=df.index,
-        open=df.Open,
-        high=df.High,
-        low=df.Low,
-        close=df.Close,
-        name=tkr) )
-    fig.add_trace( go.Scatter(x=df.index, y=df.CSMA21dd, mode='lines', name='MMA21', line_color='orange')  )
-    fig.add_trace( go.Scatter(x=df.index, y=df.CSMA50dd, mode='lines', name='MMA50', line_color='navy')  )
-    fig.add_trace( go.Scatter(x=df.index, y=df.CEMA200dd, mode='lines', name='EMA200', line_color='purple')  )
-    
+    fig.add_trace( go.Scatter(x=df.index, y=df.R21dd, mode='lines', name='R%_21', line_color='orange')  )
+    fig.add_trace( go.Scatter(x=df.index, y=df.R50dd, mode='lines', name='R%_50', line_color='navy')  )
+    fig.add_trace( go.Scatter(x=df.index, y=df.R200dd, mode='lines', name='R%_200', line_color='purple')  )
+    fig.add_hline(y=0, 
+        line_color='black', line_dash='dot', line_width=1,
+        annotation_text="Centro da Média", 
+        annotation_position="bottom left")
+   
     fig1 = go.Figure()  
-    fig1.add_trace( go.Scatter(x=df.index, y=df.RSMA21dd, mode='lines', name='R_MMA21', line_color='orange')  )
-    fig1.add_trace( go.Scatter(x=df.index, y=df.RSMA50dd, mode='lines', name='R_MMA50', line_color='navy')  )
-    fig1.add_trace( go.Scatter(x=df.index, y=df.REMA200dd, mode='lines', name='R_EMA200', line_color='purple')  )
+    fig1.add_trace( go.Scatter(x=df.index, y=df.R21dd, mode='lines', name='R%_21', line_color='orange')  )
+    fig1.add_trace( go.Scatter(x=df.index, y=df.R50dd, mode='lines', name='R%_50', line_color='navy')  )
+    fig1.add_trace( go.Scatter(x=df.index, y=df.R200dd, mode='lines', name='R%_200', line_color='purple')  )
     fig1.add_hline(y=0, 
         line_color='black', line_dash='dot', line_width=1,
         annotation_text="Centro da Média", 
@@ -214,9 +213,9 @@ def display(sutb, tkr, prd, itv):
            [{}],
            ]
         )
-    fig2.add_trace( go.Scatter(x=df.index, y=df.RSMA21dd, mode='lines', name='R_MMA21', line_color='orange') , row=1, col=1  )
-    fig2.add_trace( go.Scatter(x=df.index, y=df.RSMA50dd, mode='lines', name='R_MMA50', line_color='navy')  , row=2, col=1  )
-    fig2.add_trace( go.Scatter(x=df.index, y=df.REMA200dd, mode='lines', name='R_EMA200', line_color='purple')  , row=3, col=1  )
+    fig2.add_trace( go.Scatter(x=df.index, y=df.R21dd, mode='lines', name='R%_21', line_color='orange') , row=1, col=1  )
+    fig2.add_trace( go.Scatter(x=df.index, y=df.R50dd, mode='lines', name='R%_50', line_color='navy')  , row=2, col=1  )
+    fig2.add_trace( go.Scatter(x=df.index, y=df.R200dd, mode='lines', name='R%_200', line_color='purple')  , row=3, col=1  )
     fig2.add_hline(y=0, 
         line_color='black', line_dash='dot', line_width=1,
         row='all', col='all',
@@ -225,8 +224,8 @@ def display(sutb, tkr, prd, itv):
     
     ####### ATUALIZA LAYOUT, TRACES E AXES DOS GRÁFICOS
     #
-    fig.update_layout( title='<b>EVOLUÇÃO DO PREÇO</b>', xaxis_title='', yaxis_title='<b>Preço</b>', xaxis_rangeslider_visible=False, legend=dict(orientation="h") )
-    fig1.update_layout( title='<b>REVERSÃO À MÉDIA - AGRUPADO</b>', xaxis_title='', yaxis_title='<b>Valor</b>', xaxis_rangeslider_visible=False, legend=dict(orientation="h") )
-    fig2.update_layout( title='<b>REVERSÃO À MÉDIA - INDIVIDUAL</b>', xaxis_title='', yaxis_title='<b>Valor</b>', xaxis_rangeslider_visible=False, legend=dict(orientation="h") )
+    fig.update_layout( title='<b>RETORNO PERCENTUAL - AGRUPADO</b>', xaxis_title='', yaxis_title='<b>Perc. (%)</b>', xaxis_rangeslider_visible=False, legend=dict(orientation="h") )
+    fig1.update_layout( title='<b>RETORNO PERCENTUAL - AGRUPADO</b>', xaxis_title='', yaxis_title='<b>Perc. (%)</b>', xaxis_rangeslider_visible=False, legend=dict(orientation="h") )
+    fig2.update_layout( title='<b>RETORNO - INDIVIDUAL</b>', xaxis_title='', yaxis_title='<b>Perc. (%)</b>', xaxis_rangeslider_visible=False, legend=dict(orientation="h") )
 
     return fig, fig1, fig2, ""
