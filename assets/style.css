@@ -55,6 +55,7 @@ body {
   background-color: var(--bgColor);
   color: var(--primary);
   text-decoration: none;
+  text-align: justify;
   /* background-image: url("../static/bkg_img.jpg");
   background-repeat: no-repeat;
   background-position: right top;
@@ -80,7 +81,7 @@ a {
   }
 
 h5 {
-  color: var(--linkcolor);
+  color: var(--primary);
   font-size: 14px;
   text-align: left;
   vertical-align: top;
@@ -88,10 +89,21 @@ h5 {
   }
 
 h6 {
-  color: var(--linkcolor);
+  color: var(--primary);
   font-size: 16px;
+  font-weight: 700;
   padding: 0px;
   }
+
+li, li::marker {
+  padding-left: 15px;
+  margin-left:10px;
+  margin-bottom:15px;
+  
+
+  }
+
+
 
 .social {
   position: fixed;
@@ -138,7 +150,7 @@ h6 {
   position: fixed;
   left: 0px;
   top: 0px;
-  z-index: 5;
+  z-index: 4;
   margin: 0px 0px 0px 0px ;
   padding: 15px 15px 15px 15px;
   background-color: rgba(0, 0, 0, 0.5) !important;
@@ -153,11 +165,11 @@ h6 {
 .sidenav {
   position: fixed;
   margin: 0px 0px 0px 0px ;
-  padding: 55px 0px 0px 0px ;
+  padding: 0px 0px 0px 0px ;
   background-color: rgba(0, 0, 0, 0.5) !important;
   color: var(--primary);
   text-decoration: none;
-  z-index:4 !important;
+  z-index:5 !important;
 }
 
 .sidenav:hover {
@@ -240,7 +252,7 @@ div.inline-block > span.mr-1.self_center.badge {
 }
 
 .card-body {
-  padding: 10px !important;
+  padding: 20px !important;
 }
 
 .dash-graph {

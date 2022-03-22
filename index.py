@@ -17,20 +17,16 @@ navbar = html.Div(className='topnav',
         html.A( html.Img(src="static/logo.png", height="30"), href="../") 
     ]) 
 
-btn001 = dbc.Button(
-    id="PlayBtn001", 
-    n_clicks=0, 
-    children=[html.I(className="fas fa-play-circle")," Executar "] )
-
 cards = dbc.Container(dbc.Row(
     [
      
         dbc.Card([
-            dbc.CardHeader([html.H6("REVERSÃO À MÉDIA"), 
-            html.Span(className='card-header-sub', children="Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
+            dbc.CardHeader([html.H6(children=["REVERSÃO À MÉDIA "]),
+            html.P(className='card-header-sub', children="Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
+            html.P(dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT/community/blob/main/codes/meanrev.py', target="new")),
+            ]),
             html.Br(),
-            dbc.Badge("Versão Beta 2022-002")]),
-            html.Br(),
+            
             
             meanrev.get(), ############## IMPORTANT
             
@@ -38,7 +34,7 @@ cards = dbc.Container(dbc.Row(
 
                 #btn001,
                 
-                html.P(dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT/community/blob/main/codes/meanrev.py', target="new")),
+
 
                 #html.P("Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
 
@@ -52,11 +48,13 @@ cards = dbc.Container(dbc.Row(
                     ])
                 ]),
 
-                html.P([
-                    "Tema sugerido por : ", 
-                    html.A([" RAFI | ",html.I(className="fab fa-twitter"), " @RaphaFigueredo"], href='https://twitter.com/RaphaFigueredo', target="new")
-                ]),
+                #html.P([
+                #    "Tema sugerido por : ", 
+                #    html.A([" RAFI | ",html.I(className="fab fa-twitter"), " @RaphaFigueredo"], href='https://twitter.com/RaphaFigueredo', target="new")
+                #]),
 
+                
+                dbc.Badge("Versão Beta 2022-002"),
                 dbc.Badge("Médias"),
                 dbc.Badge("FinTwit"),
                 dbc.Badge("RAFI"),
@@ -83,7 +81,7 @@ comm_cards = dbc.Container(dbc.Row(
                 html.P("Notícias e anúncios serão publicados nessa seção do site. Não deixe de visitá-la frequentemente."),
                 html.P(["Siga a KWT no ", html.A([html.I(className="fab fa-twitter"), " Twitter"], href='https://twitter.com/KurmasanaWT', target="new")," ou no ", html.A([html.I(className="fab fa-github")," GitHub"], href='https://github.com/KurmasanaWT', target="new")]),
                 html.P("Ficaremos muito felizes com suas observações e contribuições."),
-                html.P("Um abraço, Nós!", style={'text-align':'right'}),
+                html.P("Um abraço!", style={'text-align':'right'}),
                 dbc.Badge("16/03/2022")
             ]),
         ], className="cardSize", ),
@@ -95,7 +93,7 @@ comm_cards = dbc.Container(dbc.Row(
 kwt_cards = dbc.Container(dbc.Row(
     [
         dbc.Card([
-            dbc.CardHeader(html.H6("QUEM SOMOS NÓS ???")),
+            dbc.CardHeader(html.H6("QUEM SOMOS NÓS")),
             dbc.CardImg(src="static/kwt_logowide.png"),
             dbc.CardBody([
                 html.P("Nós somos parte do universo das Start-Ups, operando no espaço existente entre os experts do mercado de capitais e os geeks do eco-sistema de inovação."),
@@ -109,63 +107,16 @@ kwt_cards = dbc.Container(dbc.Row(
             ], style={}),
         ], className="cardSize", ),
 
-        dbc.Card([
-            dbc.CardHeader(html.H6("FUNÇÃO, CRENÇA E SONHO")),
-            dbc.CardBody([
-                html.P("Nossa FUNÇÃO: Intensificar a integração no espaço entre experts e geeks."),
-                html.P("Nossa CRENÇA: Total democratização do conhecimento e da informação."),
-                html.P("Nosso SONHO: Liberté, Égalité, Fraternité!"),
-            ], style={}),
-        ], className="cardSize", ),
-
-        dbc.Card([
-            dbc.CardHeader(html.H6("ANIMAIS DE PODER")),
-            dbc.CardBody([
-                html.P("Nosso ANIMAL DE PODER: A Tartaruga, afinal devagar se vai longe!"),
-                html.P("Nos ensinamentos nativos americanos, a tartaruga é o símbolo mais velho do planeta Terra. É a personificação da deusa da energia e a Mãe eterna na qual nossa vida evolui. A tartaruga é considerada para o xamã como sendo o chão ou piso da Mãe Terra. Ela, com sua lentidão e grossa carapaça, nos ensina como podemos nos proteger."),
-            ], style={}),
-        ], className="cardSize", ),
-
-
          dbc.Card([
-            dbc.CardHeader(html.H6("SÂNSCRITO")),
+            dbc.CardHeader(html.H6("REFERÊNCIAS")),
             dbc.CardBody([
-                html.P("Kúrmásana dêvanágari कूर्मासन IAST kūrmāsana."),
-                html.P("Em sânscrito kúrma é tartaruga. Também dá nome a uma nádí do corpo energético ou um sub-prana."),
-                html.Span("Kūrma vāyu - responsável pelo piscar dos olhos. "),
+                html.Li([html.B("FOCO"), " : Desenvolvimento de sistemas de Inteligência Artificial eficazes em aplicações no mercado de capitais."]),
+                html.Li([html.B("ESTRATÉGIA"), " : Inteligência não é estatística. Inteligência é capacidade de percepção, interpretação, adaptação e ação."]),
+                html.Li([html.B("INOVAÇÃO"), " : Superar a eficiência e eficácia da gestão humana no mercado de capitais em operações de swing-trade, democratizando a gestão de ativos e alavancando estratégias institucionais."]),
+                html.Li([html.B("TRANSFORMAÇÃO"), " : Nossas soluções devem diminuir o gap entre o especialista em finanças e o especialista em tecnologia."]),
             ], style={}),
         ], className="cardSize", ),
 
-        dbc.Card([
-            dbc.CardHeader(html.H6("MITOLOGIA HINDU")),
-            dbc.CardBody([
-                html.P("Na mitologia hindu, a Tartaruga Mundial, chamada Kurma ou Kacchapa, sustenta quatro elefantes nas costas; eles, por sua vez, carregam nas costas o peso do mundo inteiro."),
-                html.P("Conta a lenda hindu, que Vishnu tomou a forma de uma tartaruga, Kurma, para salvar a humanidade em uma batalha entre Devas (seres não humanos poderosos, tidos como divindades) e os Asuras (inimigos dos deuses ou demônios).")
-            ], style={}),
-        ], className="cardSize", ),
-      
-        dbc.Card([
-            dbc.CardHeader(html.H6("CHINA")),
-            dbc.CardBody([
-                html.P("Na China, a tartaruga era um dos quatro animais sagrados no confucionismo."),
-                 html.P("Durante o período Han, estelas eram montadas em cima de tartarugas de pedra, mais tarde ligadas a Bixi, o filho de casco de tartaruga do Rei Dragão."),
-            ], style={}),
-        ], className="cardSize", ),
-
-        dbc.Card([
-            dbc.CardHeader(html.H6("ROMA ANTIGA")),
-            dbc.CardBody([
-                html.P("Na Roma Antiga o exército usava a formação testudo ('tartaruga') onde os soldados formavam uma parede de escudos para proteção."),
-            ], style={}),
-        ], className="cardSize", ),
-
-        dbc.Card([
-            dbc.CardHeader(html.H6("ESOPO")),
-            dbc.CardBody([
-                html.P("Nas Fábulas de Esopo, 'A Tartaruga e a Lebre' conta como uma corrida desigual pode ser vencida pelo parceiro mais lento."),
-            ], style={}),
-        ], className="cardSize", ),
-      
       ### incluir mais cards aqui
 
     ], className='content'), fluid=True)
@@ -185,7 +136,8 @@ mosaic = dbc.Container(dbc.Row(
 
 sidebar = dtc.SideBar(className='sidenav',
     children=[
-        dtc.SideBarItem(id='id_1', label="Python Codes", icon="fab fa-python"),
+        dtc.SideBarItem(id='id_0', label="Página Inicial", icon="fas fa-home"),
+        dtc.SideBarItem(id='id_1', label="Códigos Python", icon="fab fa-python"),
         dtc.SideBarItem(id='id_2', label="A Comunidade", icon="fas fa-users"),
         dtc.SideBarItem(id='id_3', label="Sobre Nós", icon="fas fa-address-card"),
         dtc.SideBarItem(id='id_4', label="World News (Beta)", icon="fas fa-video"),
@@ -208,6 +160,7 @@ alert=html.Div(
         duration=4000
     ))
 
+content_0 = html.Div( "" )
 content_1 = html.Div( [cards] )
 content_2 = html.Div( [comm_cards] )
 content_3 = html.Div( [kwt_cards] )
@@ -224,6 +177,7 @@ app.layout=dbc.Container(
 @app.callback(
     Output("page_content", "children"),
     [
+        Input("id_0", "n_clicks_timestamp"),
         Input("id_1", "n_clicks_timestamp"),
         Input("id_2", "n_clicks_timestamp"),
         Input("id_3", "n_clicks_timestamp"),
@@ -234,12 +188,14 @@ app.layout=dbc.Container(
     ]
 )
 
-def toggle_collapse(input1, input2, input3, input4):
-    btn_df = pd.DataFrame({"input1": [input1], "input2": [input2],
+def toggle_collapse(input0, input1, input2, input3, input4):
+    btn_df = pd.DataFrame({"input0": [input0], "input1": [input1], "input2": [input2],
                            "input3": [input3], "input4": [input4]})
     
     btn_df = btn_df.fillna(0)
 
+    if btn_df.idxmax(axis=1).values == "input0":
+        return content_0
     if btn_df.idxmax(axis=1).values == "input1":
         return content_1
     if btn_df.idxmax(axis=1).values == "input2":
