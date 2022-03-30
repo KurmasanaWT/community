@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import yfinance as yf
 import math
+from sklearn.linear_model import LinearRegression
 
 from app import app
 
@@ -74,6 +75,39 @@ periods = pd.read_csv('db/periods.csv', delimiter=';').to_dict('records') # per�
 
 intervals = pd.read_csv('db/intervals.csv', delimiter=';').to_dict('records') # intervalos entre dados do período
 
+def market_beta(X,Y,N):
+    """ 
+    X = The independent variable which is the Market
+    Y = The dependent variable which is the Stock
+    N = The length of the Window
+     
+    It returns the alphas and the betas of
+    the rolling regression
+    """
+    if len(X)==len(Y):
+        print("Yes") 
+    else:
+        print("No")
+
+    # all the observations
+    obs = len(X)
+     
+    # initiate the betas with null values
+    betas = np.full(obs, np.nan)
+     
+    # initiate the alphas with null values
+    alphas = np.full(obs, np.nan)
+     
+     
+    for i in range((obs-N)):
+        regressor = LinearRegression()
+        regressor.fit(X.to_numpy()[i : i + N+1].reshape(-1,1), Y.to_numpy()[i : i + N+1])
+         
+        betas[i+N]  = regressor.coef_[0]
+        alphas[i+N]  = regressor.intercept_
+ 
+    return(alphas, betas)
+
 # LAYOUT
 layout = dbc.Container(
         children=[
@@ -89,19 +123,33 @@ layout = dbc.Container(
                 ),
             dbc.Row([
                 html.Div(className='kwtdrops', children=[
-                        html.H5("ATIVO"), dcc.Dropdown( id="ticker", options=tickers, value='^BVSP', clearable=False, style={'width':'600px'} ), 
+                        html.H5("ATIVO"), dcc.Dropdown( id="ticker", options=tickers, value='VALE3.SA', clearable=False, style={'width':'300px'} ), 
+                        html.H5("BENCHMARK"), dcc.Dropdown( id="indexer", options=tickers, value='^BVSP', clearable=False, style={'width':'300px'} ), 
                         html.H5("PERÍODO"), dcc.Dropdown( id="periods", options=periods, value='1y', clearable=False, style={'width':'10rem'} ),
                         html.H5("INTERVALO"), dcc.Dropdown( id="intervals", options=intervals, value='1d', clearable=False, style={'width':'10rem'} ),
                         dbc.Button(className="kwtchartbtn",id='submitb', n_clicks=0, children='Atualizar')
                 ]),
             ]),
             html.Br(),
-            dbc.Row([
-                dcc.Graph(id="graph", config=config1),                             
-                dcc.Graph(id="graph1", config=config1),
-                dcc.Graph(id="graph2", config=config1),          
-                dcc.Graph(id="graph3", config=config1),                     
-            ]),                      
+            dcc.Tabs([
+                dcc.Tab(label='Reversão à Média', children=[
+                    dbc.Row([
+                        dcc.Graph(id="graph", config=config1),                             
+                        dcc.Graph(id="graph1", config=config1),
+                        dcc.Graph(id="graph2", config=config1),          
+                        dcc.Graph(id="graph3", config=config1),                     
+                        ])
+                    ]),   
+
+                dcc.Tab(label='Retorno, Correlação, Alpha e Beta', children=[
+                    dbc.Row([
+                        dcc.Graph(id="cor_graph", config=config1),                             
+                        dcc.Graph(id="cor_graph1", config=config1),
+                        dcc.Graph(id="cor_graph2", config=config1),          
+                        dcc.Graph(id="cor_graph3", config=config1),                     
+                        ])
+                    ]),      
+                ])
             ], fluid=True)
 
 def get():
@@ -113,15 +161,23 @@ def get():
 #
 @app.callback(
 
-    [ Output("graph", "figure"),
+    [ 
+    Output("graph", "figure"),
     Output("graph1", "figure"),
     Output("graph2", "figure"),
     Output("graph3", "figure"),
+
+    Output("cor_graph", "figure"),
+    Output("cor_graph1", "figure"),
+    Output("cor_graph2", "figure"),
+    Output("cor_graph3", "figure"),
+
     Output("load_o1", "children") ],
 
     [ Input('submitb', 'n_clicks') ],
 
     [ State("ticker", "value"), 
+    State("indexer", "value"),
     State("periods", "value"), 
     State("intervals", "value") ],
     
@@ -129,39 +185,68 @@ def get():
 
 ###### FUNC. CALLBACK PAINEL MERCADO
 #
-def display(sutb, tkr, prd, itv):
-    ####### DOWNLOAD DE PREÇO E VOLUME DO ATIVO SELECIONADO
-    #
+def display(sutb, tkr, idx, prd, itv):
 
-    #start='2017-01-01'
-    #end='2021-12-31'
-    df = yf.download(tkr, interval=itv, period=prd)
-    df = df[df.index.dayofweek < 5]
-    df.fillna( method ='ffill', inplace = True)
-    df.fillna( method ='bfill', inplace = True)
-    #df = df.resample(rule='B').bfill()
-
-    ### REVERSÃO À MÉDIA ARITIMÉTICA DE 21 DIAS
     per21dd=21
-    df['CSMA21dd']=df.Close.rolling(per21dd).mean()
-    df['RSMA21dd']=((df.Close/df['CSMA21dd'])-1)*100
-    df["RSMA21dd_Color"] = np.where(df.RSMA21dd < 0, 'red', 'green')
-
-    ### REVERSÃO À MÉDIA ARITIMÉTICA DE 50 DIAS
     per50dd=50
-    df['CSMA50dd']=df.Close.rolling(per50dd).mean()
-    df['RSMA50dd']=((df.Close/df['CSMA50dd'])-1)*100
-    df["RSMA50dd_Color"] = np.where(df.RSMA50dd < 0, 'red', 'green')
-
-    ### REVERSÃO À MÉDIA EXPONENCIAL DE 200 DIAS
     per200dd=200
-    df['CEMA200dd']=df.Close.ewm(span=per200dd, min_periods=per200dd, adjust=True).mean()
-    df['REMA200dd']=((df.Close/df['CEMA200dd'])-1)*100
-    df["REMA200dd_Color"] = np.where(df.REMA200dd < 0, 'red', 'green')
+
+    ####### DOWNLOAD DE PREÇO E VOLUME
+    df = yf.download([ tkr , idx ], interval=itv, period=prd)
+    df = pd.DataFrame(df)
+    df = df[df.index.dayofweek < 5]
+    print("DF : " + str(len(df)))
+
+    for n in df.Close:
+        df['Return',n] = df.Close[n].pct_change()
+        df.fillna(method="bfill",inplace=True)
+
+    for n in df.Close:
+        df['RetAcum',n] = (np.log(df.Close[n] / df.Close[n].iloc[0]))*100
+        df['Return21dd',n] = (np.log(df.Close[n] / df.Close[n].shift(per21dd)))*100
+        df['Return50dd',n] = (np.log(df.Close[n] / df.Close[n].shift(per50dd)))*100
+        df['Return200dd',n] = (np.log(df.Close[n] / df.Close[n].shift(per200dd)))*100
+        ##divide by zero encountered in log
+
+        df['PrevClose',n]=df.Close[n].shift(1)
+
+        df['VarClose',n]=((df.Close[n] - df.Close[n].shift(1))/df.Close[n].shift(1))*100
+        df['VarAcum',n] = ((df.Close[n]/df.Close[n].iloc[0])-1)*100
+
+        ### REVERSÃO À MÉDIA ARITIMÉTICA DE 21 DIAS
+        df['CSMA21dd',n]=df.Close[n].rolling(per21dd).mean()
+        df['RSMA21dd',n]=((df.Close[n]/df['CSMA21dd',n])-1)*100
+
+        ### REVERSÃO À MÉDIA ARITIMÉTICA DE 50 DIAS
+        df['CSMA50dd',n]=df.Close[n].rolling(per50dd).mean()
+        df['RSMA50dd',n]=((df.Close[n]/df['CSMA50dd',n])-1)*100
+
+        ### REVERSÃO À MÉDIA EXPONENCIAL DE 200 DIAS
+        df['CEMA200dd',n]=df.Close[n].ewm(span=per200dd, min_periods=per200dd, adjust=True).mean()
+        df['REMA200dd',n]=((df.Close[n]/df['CEMA200dd',n])-1)*100
+
+    df = df.sort_index(axis=1)
+
+    ### ROLLING CORRELATION
+
+    df['RCorr21dd'] = df['Return'][tkr].rolling(per21dd).corr(df['Return'][idx])
+    df['RCorr50dd'] = df['Return'][tkr].rolling(per50dd).corr(df['Return'][idx])
+    df['RCorr200dd'] = df['Return'][tkr].rolling(per200dd).corr(df['Return'][idx])
+
+    ### RETORNO COMPARADO
+
+    df['RetComp'] = df['RetAcum'][tkr] / df['RetAcum'][idx]
+    df['RetCompDif'] = df['RetAcum'][tkr] - df['RetAcum'][idx]
+    df["RetCompDif_Color"] = np.where(df.RetCompDif < 0, 'red', 'green')
+    df['TBENCK'] = df['Close'][tkr] / df['Close'][idx]
+
+    ### CALCULA ALPHA E BETA
+
+    df['Alpha21dd'],df['Beta21dd'] = market_beta(df.Return[tkr], df.Return[idx], 21)
+    df['Alpha50dd'],df['Beta50dd'] = market_beta(df.Return[tkr], df.Return[idx], 50)
+    df['Alpha200dd'],df['Beta200dd'] = market_beta(df.Return[tkr], df.Return[idx], 200)
 
     '''
-    df['PrevClose']=df.Close.shift(1)
-    df['VarClose']=((df.Close - df.Close.shift(1))/df.Close.shift(1))*100
     df['VarOpen']=((df.Open - df.Open.shift(1))/df.Open.shift(1))*100
     df['VarHigh']=((df.High - df.High.shift(1))/df.High.shift(1))*100
     df['VarLow']=((df.Low - df.Low.shift(1))/df.Low.shift(1))*100
@@ -188,18 +273,28 @@ def display(sutb, tkr, prd, itv):
     ####### CONSTROI GRÁFICOS
     #
 
+    ### REVERSÃO À MÉIA ###
     ### FIG 0 ---------------------------------------------------------------------------
-    fig = go.Figure()
-    fig.add_trace( go.Candlestick ( 
-        x=df.index,
-        open=df.Open,
-        high=df.High,
-        low=df.Low,
-        close=df.Close,
-        name=tkr) )
-    fig.add_trace( go.Scatter(x=df.index, y=df.CSMA21dd, mode='lines', name='MMA21', line_width=1,line_color='orange') )
-    fig.add_trace( go.Scatter(x=df.index, y=df.CSMA50dd, mode='lines', name='MMA50', line_width=1,line_color='navy') )
-    fig.add_trace( go.Scatter(x=df.index, y=df.CEMA200dd, mode='lines', name='EMA200', line_width=1,line_color='purple') )
+    fig = make_subplots(
+        rows=1, cols=2,
+        column_widths=[.85,.15],
+        #subplot_titles=("", "")
+        specs= [
+            [{'type' : 'candlestick'}, {'type' : 'histogram'}],
+        ],
+        )
+    fig.add_trace( go.Candlestick ( x=df.index, open=df.Open[tkr], high=df.High[tkr], low=df.Low[tkr], close=df.Close[tkr], name=tkr), col=1, row=1)
+    fig.add_trace( go.Scatter(x=df.index, y=df.CSMA21dd[tkr], mode='lines', name='MMA21', line_width=1,line_color='orange', line_shape='linear'), col=1, row=1 )
+    fig.add_trace( go.Scatter(x=df.index, y=df.CSMA50dd[tkr], mode='lines', name='MMA50', line_width=1,line_color='navy', line_shape='linear'), col=1, row=1 )
+    fig.add_trace( go.Scatter(x=df.index, y=df.CEMA200dd[tkr], mode='lines', name='EMA200', line_width=1,line_color='purple', line_shape='linear'), col=1, row=1 )
+
+    fig.add_trace( go.Histogram(x=df.VarClose[tkr], name=tkr, histnorm='percent', offsetgroup=0), col=2, row=1 )
+
+    fig.update_layout( title='<b>EVOLUÇÃO DO PREÇO DO ATIVO</b>' )
+    fig.update_layout( xaxis_title='', yaxis_title='Preço', xaxis2_title='Var. %', yaxis2_title='Percent. Ocorrências', xaxis_rangeslider_visible=False, hovermode='x unified', legend=dict(orientation="h") )
+
+    fig.update_traces(bingroup='overlay', nbinsx=20, marker_line_color='rgb(0,0,0)', marker_line_width=1.5, opacity=0.5, col=2, row=1, cumulative_enabled=False) 
+    fig.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]), 
     
     ### FIG 1 ---------------------------------------------------------------------------
     fig1 = make_subplots(
@@ -207,24 +302,28 @@ def display(sutb, tkr, prd, itv):
         column_widths=[.85,.15],
         subplot_titles=("", "Histograma (Percent)")
         )
-    fig1.add_trace( go.Scatter(x=df.index, y=df.RSMA21dd, mode='lines', name='R_MMA21', line_width=1, line_color='orange'), col=1, row=1  )
-    fig1.add_trace( go.Scatter(x=df.index, y=df.RSMA50dd, mode='lines', name='R_MMA50', line_width=1,line_color='navy'), col=1, row=1  )
-    fig1.add_trace( go.Scatter(x=df.index, y=df.REMA200dd, mode='lines', name='R_EMA200', line_width=1,line_color='purple'), col=1, row=1  )
+    fig1.add_trace( go.Scatter(x=df.index, y=df.RSMA21dd[tkr], mode='lines', name='R_MMA21', line_width=1, line_color='orange', line_shape='linear'), col=1, row=1  )
+    fig1.add_trace( go.Scatter(x=df.index, y=df.RSMA50dd[tkr], mode='lines', name='R_MMA50', line_width=1,line_color='navy', line_shape='linear'), col=1, row=1  )
+    fig1.add_trace( go.Scatter(x=df.index, y=df.REMA200dd[tkr], mode='lines', name='R_EMA200', line_width=1,line_color='purple', line_shape='linear'), col=1, row=1  )
     fig1.add_hline(y=0, 
         line_color='black', line_dash='dot', line_width=1,
         annotation_text="Centro da Média", 
         annotation_position="bottom left", col=1, row=1)
     
-    fig1.add_trace( go.Histogram(x=df.RSMA21dd, name='R_MMA21', histnorm='percent', offsetgroup=0), col=2, row=1  )
-    fig1.add_trace( go.Histogram(x=df.RSMA50dd, name='R_MMA50', histnorm='percent', offsetgroup=0), col=2, row=1  )
-    fig1.add_trace( go.Histogram(x=df.REMA200dd, name='R_EMA200', histnorm='percent', offsetgroup=0), col=2, row=1  )
+    fig1.add_trace( go.Histogram(x=df.RSMA21dd[tkr], name='R_MMA21', histnorm='percent', offsetgroup=0), col=2, row=1  )
+    fig1.add_trace( go.Histogram(x=df.RSMA50dd[tkr], name='R_MMA50', histnorm='percent', offsetgroup=0), col=2, row=1  )
+    fig1.add_trace( go.Histogram(x=df.REMA200dd[tkr], name='R_EMA200', histnorm='percent', offsetgroup=0), col=2, row=1  )
 
+    fig1.update_layout(title_text='<b>REVERSÃO À MÉDIA - Agrupada</b>', yaxis_title='<b>Valor</b>', xaxis_rangeslider_visible=False, hovermode='x unified', legend=dict(orientation="h") )
     fig1.update_layout(
         xaxis=dict(showgrid=False),
         xaxis2=dict(showgrid=False)
     )
 
-    fig1.update_traces(bingroup='overlay', nbinsx=20, opacity=0.5, col=2, row=1, cumulative_enabled=False) 
+    fig1.update_traces(bingroup='overlay', nbinsx=20, marker_line_color='rgb(0,0,0)', marker_line_width=1.5, opacity=0.5, col=2, row=1, cumulative_enabled=False) 
+
+    fig1.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ] )
+
 
     ### FIG 2 ---------------------------------------------------------------------------
     fig2 = make_subplots(
@@ -244,74 +343,74 @@ def display(sutb, tkr, prd, itv):
         #   [{}],
         #   ]
         )
-    fig2.add_trace( go.Scatter(x=df.index, y=df.RSMA21dd, mode='lines', line_width=1, name='R_MMA21', line_color='orange') , row=1, col=1  ),
+    fig2.add_trace( go.Scatter(x=df.index, y=df.RSMA21dd[tkr], mode='lines', line_width=1, name='R_MMA21', line_color='orange', line_shape='linear') , row=1, col=1  ),
     
     fig2.add_trace( 
         go.Indicator( 
             mode = "gauge+number+delta", 
-            value = df.RSMA21dd[-1], 
+            value = df.RSMA21dd[tkr][-1], 
             #title = {'text': "Reversão MMA21"}, 
-            delta = {'reference': df.RSMA21dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            delta = {'reference': df.RSMA21dd[tkr].mean(), 'relative': True,'valueformat':'.2%'}, 
             gauge={
                 'axis':{
-                    'range':[math.floor(df.RSMA21dd.min()),math.ceil(df.RSMA21dd.max())],
-                    'dtick': ( math.ceil(df.RSMA21dd.max()) - math.floor(df.RSMA21dd.min()) )/10,
+                    'range':[math.floor(df.RSMA21dd[tkr].min()),math.ceil(df.RSMA21dd[tkr].max())],
+                    'dtick': ( math.ceil(df.RSMA21dd[tkr].max()) - math.floor(df.RSMA21dd[tkr].min()) )/10,
                     'tickformat':'0.1f'
                 },
                 'steps' : [
-                    {'range': [math.floor(df.RSMA21dd.min()), (math.floor(df.RSMA21dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
-                    {'range': [(math.ceil(df.RSMA21dd.max())*0.5), math.ceil(df.RSMA21dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                    {'range': [math.floor(df.RSMA21dd[tkr].min()), (math.floor(df.RSMA21dd[tkr].min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.RSMA21dd[tkr].max())*0.5), math.ceil(df.RSMA21dd[tkr].max())], 'color': "rgba(200,50,50,0.55)"}],
                 'threshold' : {'line': {'color': "red", 'width': 4}, 
                             'thickness': 1, 
-                            'value': df.RSMA21dd.mean()},
+                            'value': df.RSMA21dd[tkr].mean()},
                 'bar': {'color': "black"}
             }
         ), row=1, col=2  ),
 
-    fig2.add_trace( go.Scatter(x=df.index, y=df.RSMA50dd, mode='lines', line_width=1, name='R_MMA50', line_color='navy')  , row=2, col=1  )
+    fig2.add_trace( go.Scatter(x=df.index, y=df.RSMA50dd[tkr], mode='lines', line_width=1, name='R_MMA50', line_color='navy')  , row=2, col=1  )
 
     fig2.add_trace( 
         go.Indicator( 
             mode = "gauge+number+delta", 
-            value = df.RSMA50dd[-1], 
+            value = df.RSMA50dd[tkr][-1], 
             #title = {'text': "Reversão MMA50"}, 
-            delta = {'reference': df.RSMA50dd.mean(), 'relative': True, 'valueformat':'.2%'}, 
+            delta = {'reference': df.RSMA50dd[tkr].mean(), 'relative': True, 'valueformat':'.2%'}, 
             gauge={
                 'axis':{
-                    'range':[math.floor(df.RSMA50dd.min()),math.ceil(df.RSMA50dd.max())],
-                    'dtick': ( math.ceil(df.RSMA50dd.max()) - math.floor(df.RSMA50dd.min()) )/10,
+                    'range':[math.floor(df.RSMA50dd[tkr].min()),math.ceil(df.RSMA50dd[tkr].max())],
+                    'dtick': ( math.ceil(df.RSMA50dd[tkr].max()) - math.floor(df.RSMA50dd[tkr].min()) )/10,
                     'tickformat':'0.1f'
                 },
                 'steps' : [
-                    {'range': [math.floor(df.RSMA50dd.min()), (math.floor(df.RSMA50dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
-                    {'range': [(math.ceil(df.RSMA50dd.max())*0.5), math.ceil(df.RSMA50dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                    {'range': [math.floor(df.RSMA50dd[tkr].min()), (math.floor(df.RSMA50dd[tkr].min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.RSMA50dd[tkr].max())*0.5), math.ceil(df.RSMA50dd[tkr].max())], 'color': "rgba(200,50,50,0.55)"}],
                 'threshold' : {'line': {'color': "red", 'width': 4}, 
                             'thickness': 1, 
-                            'value': df.RSMA50dd.mean()},
+                            'value': df.RSMA50dd[tkr].mean()},
                 'bar': {'color': "black"}
             }
         ), row=2, col=2  ),
 
-    fig2.add_trace( go.Scatter(x=df.index, y=df.REMA200dd, mode='lines', line_width=1, name='R_EMA200', line_color='purple')  , row=3, col=1  )
+    fig2.add_trace( go.Scatter(x=df.index, y=df.REMA200dd[tkr], mode='lines', line_width=1, name='R_EMA200', line_color='purple', line_shape='linear')  , row=3, col=1  )
 
     fig2.add_trace( 
         go.Indicator( 
             mode = "gauge+number+delta", 
-            value = df.REMA200dd[-1], 
+            value = df.REMA200dd[tkr][-1], 
             #title = {'text': "Reversão EMA200"}, 
-            delta = {'reference': df.REMA200dd.mean(), 'relative': True, 'valueformat':'.2%'}, 
+            delta = {'reference': df.REMA200dd[tkr].mean(), 'relative': True, 'valueformat':'.2%'}, 
             gauge={
                 'axis':{
-                    'range':[math.floor(df.REMA200dd.min()),math.ceil(df.REMA200dd.max())],
-                    'dtick': ( math.ceil(df.REMA200dd.max()) - math.floor(df.REMA200dd.min()) )/10,
+                    'range':[math.floor(df.REMA200dd[tkr].min()),math.ceil(df.REMA200dd[tkr].max())],
+                    'dtick': ( math.ceil(df.REMA200dd[tkr].max()) - math.floor(df.REMA200dd[tkr].min()) )/10,
                     'tickformat':'0.1f'
                 },
                 'steps' : [
-                    {'range': [math.floor(df.REMA200dd.min()), (math.floor(df.REMA200dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
-                    {'range': [(math.ceil(df.REMA200dd.max())*0.5), math.ceil(df.REMA200dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                    {'range': [math.floor(df.REMA200dd[tkr].min()), (math.floor(df.REMA200dd[tkr].min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.REMA200dd[tkr].max())*0.5), math.ceil(df.REMA200dd[tkr].max())], 'color': "rgba(200,50,50,0.55)"}],
                 'threshold' : {'line': {'color': "red", 'width': 4}, 
                             'thickness': 1, 
-                            'value': df.REMA200dd.mean()},
+                            'value': df.REMA200dd[tkr].mean()},
                 'bar': {'color': "black"}
             }
       ), row=3, col=2  ),
@@ -322,6 +421,9 @@ def display(sutb, tkr, prd, itv):
     #    annotation_position="bottom left", 
     #    row=1, col=1,)
 
+    fig2.update_layout(title_text='<b>REVERSÃO À MÉDIA - Individualizada</b>', yaxis_title='<b>Valor</b>', xaxis_rangeslider_visible=False, hovermode='x unified', legend=dict(orientation="h") )
+    fig2.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ] )
+
     ### FIG 3 ---------------------------------------------------------------------------
 
     fig3 = make_subplots(
@@ -329,33 +431,33 @@ def display(sutb, tkr, prd, itv):
         column_widths=[.33, .33, .33],
         subplot_titles=("MÉDIA vs RSMA21dd", "MÉDIA vs RSMA50dd", "MÉDIA vs REMA200dd"),
     )
-    fig3.add_trace( go.Scatter(name='', x=df.RSMA21dd, y=df.CSMA21dd, text=df.index.strftime("%d/%m/%Y"),
+    fig3.add_trace( go.Scatter(name='', x=df.RSMA21dd[tkr], y=df.CSMA21dd[tkr], text=df.index.strftime("%d/%m/%Y"),
         mode='markers',
         marker=dict(
             size=7,
-            color=df.RSMA21dd, #set color equal to a variable
+            color=df.RSMA21dd[tkr], #set color equal to a variable
             colorscale='Bluered', # one of plotly colorscales
             opacity=0.5,
             showscale=False),
         hovertemplate = "%{text} <br> RSMA21dd : %{x:.2f} </br> MÉDIA PREÇO : %{y:,.2f}"
         ), row=1, col=1 
     ) 
-    fig3.add_trace( go.Scatter(name='', x=df.RSMA50dd, y=df.CSMA50dd, text=df.index.strftime("%d/%m/%Y"),
+    fig3.add_trace( go.Scatter(name='', x=df.RSMA50dd[tkr], y=df.CSMA50dd[tkr], text=df.index.strftime("%d/%m/%Y"),
         mode='markers',
         marker=dict(
             size=7,
-            color=df.RSMA50dd, #set color equal to a variable
+            color=df.RSMA50dd[tkr], #set color equal to a variable
             colorscale='Bluered', # one of plotly colorscales
             opacity=0.5,
             showscale=False),
         hovertemplate = "%{text} <br> RSMA50dd : %{x:.2f} </br> MÉDIA PREÇO : %{y:,.2f}"
         ), row=1, col=2 
     ) 
-    fig3.add_trace( go.Scatter(name='', x=df.REMA200dd, y=df.CEMA200dd, text=df.index.strftime("%d/%m/%Y"),
+    fig3.add_trace( go.Scatter(name='', x=df.REMA200dd[tkr], y=df.CEMA200dd[tkr], text=df.index.strftime("%d/%m/%Y"),
         mode='markers',
         marker=dict(
             size=7,
-            color=df.REMA200dd, #set color equal to a variable
+            color=df.REMA200dd[tkr], #set color equal to a variable
             colorscale='Bluered', # one of plotly colorscales
             opacity=0.5,
             showscale=False),
@@ -363,21 +465,280 @@ def display(sutb, tkr, prd, itv):
         ), row=1, col=3 
     ) 
     
-
-
-    ####### ATUALIZA LAYOUT, TRACES E AXES DOS GRÁFICOS
-    #
-    fig.update_layout( title='<b>EVOLUÇÃO DO PREÇO</b>', xaxis_title='',yaxis_title='<b>Preço</b>', xaxis_rangeslider_visible=False, hovermode='x unified', legend=dict(orientation="h") )
-    
-    fig1.update_layout(title_text='REVERSÃO À MÉDIA - Agrupado', yaxis_title='<b>Valor</b>', xaxis_rangeslider_visible=False, hovermode='x unified', legend=dict(orientation="h") )
-
-    fig2.update_layout(title_text='REVERSÃO À MÉDIA', yaxis_title='<b>Valor</b>', xaxis_rangeslider_visible=False, hovermode='x unified', legend=dict(orientation="h") )
-
-    fig3.update_layout( showlegend=False )
-
-    fig.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ] )
-    fig1.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ] )
-    fig2.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ] )
+    fig3.update_layout(title_text='<b>REVERSÃO À MÉDIA COMPARADA: MÉDIA</b>', showlegend=False, hovermode='x unified' )
     fig3.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ] )
 
-    return fig, fig2, fig1, fig3, ""
+    ### ALPHA, BETA, CORRELAÇÃO E RETORNO ###
+    ### FIG 4 ---------------------------------------------------------------------------    
+    fig4 = make_subplots(
+        rows=1, cols=2,
+        column_widths=[.85,.15],
+        #subplot_titles=("", "")
+        )
+    
+    fig4.add_trace( go.Scatter(x=df.index, y=df.RetAcum[tkr], mode="lines", line_width=1.5, line_color="blue", name=tkr, connectgaps=True, line_shape='linear') , col=1, row=1 ) 
+    fig4.add_trace( go.Scatter(x=df.index, y=df.RetAcum[idx], mode="lines", line_width=1.5, line_dash='dot', line_color="black", name=idx, connectgaps=True, line_shape='linear') , col=1, row=1 ) 
+    
+    fig4.add_trace( go.Bar( x=df.index, y=df.RetCompDif, marker_color=df.RetCompDif_Color, opacity=0.5, name=tkr), col=1, row=1 ) 
+
+    fig4.add_hline(y=0, 
+        line_color='black', line_dash='dot', line_width=1,
+        annotation_text="", 
+        annotation_position="bottom left", col=1, row=1)
+    
+    fig4.add_trace( go.Histogram(x=df.RetAcum[tkr], name=tkr, histnorm='percent', offsetgroup=0), col=2, row=1  )
+    fig4.add_trace( go.Histogram(x=df.RetAcum[idx], name=idx, histnorm='percent', offsetgroup=0), col=2, row=1  )
+
+    fig4.update_layout( title='<b>RETORNO ACUMULADO</b>' )
+    fig4.update_layout( xaxis_title='', yaxis_title='Var. Percentual Acumulada', xaxis2_title='Var. %', yaxis2_title='Percent. Ocorrências', hovermode='x unified', legend=dict(orientation="h") )
+
+    fig4.update_traces(bingroup='overlay', nbinsx=20, marker_line_color='rgb(0,0,0)', marker_line_width=1.5, opacity=0.5, col=2, row=1, cumulative_enabled=False) 
+    fig4.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]), 
+
+    ### FIG 5 ---------------------------------------------------------------------------    
+    fig5 = make_subplots(
+        rows=3, cols=2,
+        column_widths=[0.85,.15],
+        row_heights=[.33, .33, .33],
+        specs= [
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+        ],)
+    fig5.add_trace( go.Scatter(x=df.index, y=df.RCorr21dd, mode="lines", line_width=1, line_color="orange", name="RCorr21dd", connectgaps=True, line_shape='linear') , row=1, col=1 ) 
+    fig5.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.RCorr21dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.RCorr21dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.RCorr21dd.min()),math.ceil(df.RCorr21dd.max())],
+                    'dtick': ( math.ceil(df.RCorr21dd.max()) - math.floor(df.RCorr21dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.RCorr21dd.min()), (math.floor(df.RCorr21dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.RCorr21dd.max())*0.5), math.ceil(df.RCorr21dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.RCorr21dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=1, col=2  ),
+
+    fig5.add_trace( go.Scatter(x=df.index, y=df.RCorr50dd, mode="lines", line_width=1, line_color="navy", name="RCorr50dd", connectgaps=True, line_shape='linear') , row=2, col=1 ) 
+    fig5.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.RCorr50dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.RCorr50dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.RCorr50dd.min()),math.ceil(df.RCorr50dd.max())],
+                    'dtick': ( math.ceil(df.RCorr50dd.max()) - math.floor(df.RCorr50dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.RCorr50dd.min()), (math.floor(df.RCorr50dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.RCorr50dd.max())*0.5), math.ceil(df.RCorr50dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.RCorr50dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=2, col=2  ),
+        
+    fig5.add_trace( go.Scatter(x=df.index, y=df.RCorr200dd, mode="lines", line_width=1, line_color="purple", name="RCorr200dd", connectgaps=True, line_shape='linear') , row=3, col=1 ) 
+    fig5.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.RCorr200dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.RCorr200dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.RCorr200dd.min()),math.ceil(df.RCorr200dd.max())],
+                    'dtick': ( math.ceil(df.RCorr200dd.max()) - math.floor(df.RCorr200dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.RCorr200dd.min()), (math.floor(df.RCorr200dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.RCorr200dd.max())*0.5), math.ceil(df.RCorr200dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.RCorr200dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=3, col=2  ),
+
+    fig5.update_layout( title='<b>CORRELAÇÃO MÓVEL</b>', xaxis_title='', yaxis_title='<b>Valor', legend=dict(orientation="h"), hovermode='x unified' )
+    fig5.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]), 
+
+    ### FIG 6 ---------------------------------------------------------------------------    
+    fig6 = make_subplots(
+        rows=3, cols=2,
+        column_widths=[0.85,.15],
+        row_heights=[.33, .33, .33],
+        specs= [
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+        ],)
+    fig6.add_trace( go.Scatter(x=df.index, y=df.Alpha21dd, mode="lines", line_width=1, line_color="orange", name="Alpha21dd", connectgaps=True, line_shape='linear') , row=1, col=1) 
+    fig6.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.Alpha21dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.Alpha21dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.Alpha21dd.min()),math.ceil(df.Alpha21dd.max())],
+                    'dtick': ( math.ceil(df.Alpha21dd.max()) - math.floor(df.Alpha21dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.Alpha21dd.min()), (math.floor(df.Alpha21dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.Alpha21dd.max())*0.5), math.ceil(df.Alpha21dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.Alpha21dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=1, col=2  ),
+
+    fig6.add_trace( go.Scatter(x=df.index, y=df.Alpha50dd, mode="lines", line_width=1, line_color="navy", name="Alpha50dd", connectgaps=True, line_shape='linear') , row=2, col=1) 
+    fig6.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.Alpha50dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.Alpha50dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.Alpha50dd.min()),math.ceil(df.Alpha50dd.max())],
+                    'dtick': ( math.ceil(df.Alpha50dd.max()) - math.floor(df.Alpha50dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.Alpha50dd.min()), (math.floor(df.Alpha50dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.Alpha50dd.max())*0.5), math.ceil(df.Alpha50dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.Alpha50dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=2, col=2  ),
+
+    fig6.add_trace( go.Scatter(x=df.index, y=df.Alpha200dd, mode="lines", line_width=1, line_color="purple", name="Alpha200dd", connectgaps=True, line_shape='linear') , row=3, col=1) 
+    fig6.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.Alpha200dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.Alpha200dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.Alpha200dd.min()),math.ceil(df.Alpha200dd.max())],
+                    'dtick': ( math.ceil(df.Alpha200dd.max()) - math.floor(df.Alpha200dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.Alpha200dd.min()), (math.floor(df.Alpha200dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.Alpha200dd.max())*0.5), math.ceil(df.Alpha200dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.Alpha200dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=3, col=2  ),
+    
+    fig6.update_layout( title='<b>ALPHA MÓVEL</b>', xaxis_title='', yaxis_title='<b>Valor', legend=dict(orientation="h"), hovermode='x unified')
+    fig6.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]), 
+
+    ### FIG 7 ---------------------------------------------------------------------------    
+    fig7 = make_subplots(
+        rows=3, cols=2,
+        column_widths=[0.85,.15],
+        row_heights=[.33, .33, .33],
+        specs= [
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+            [{'type' : 'xy'}, {'type' : 'indicator'}],
+        ],)
+    fig7.add_trace( go.Scatter(x=df.index, y=df.Beta21dd, mode="lines", line_width=1, line_color="orange", name="Beta21dd", connectgaps=True, line_shape='linear') , row=1, col=1) 
+    fig7.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.Beta21dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.Beta21dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.Beta21dd.min()),math.ceil(df.Beta21dd.max())],
+                    'dtick': ( math.ceil(df.Beta21dd.max()) - math.floor(df.Beta21dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.Beta21dd.min()), (math.floor(df.Beta21dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.Beta21dd.max())*0.5), math.ceil(df.Beta21dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.Beta21dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=1, col=2  ),
+
+    fig7.add_trace( go.Scatter(x=df.index, y=df.Beta50dd, mode="lines", line_width=1, line_color="navy", name="Beta50dd", connectgaps=True, line_shape='linear') , row=2, col=1) 
+    fig7.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.Beta50dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.Beta50dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.Beta50dd.min()),math.ceil(df.Beta50dd.max())],
+                    'dtick': ( math.ceil(df.Beta50dd.max()) - math.floor(df.Beta50dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.Beta50dd.min()), (math.floor(df.Beta50dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.Beta50dd.max())*0.5), math.ceil(df.Beta50dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.Beta50dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=2, col=2  ),
+
+    fig7.add_trace( go.Scatter(x=df.index, y=df.Beta200dd, mode="lines", line_width=1, line_color="purple", name="Beta200dd", connectgaps=True, line_shape='linear') , row=3, col=1) 
+    fig7.add_trace( 
+        go.Indicator( 
+            mode = "gauge+number+delta", 
+            value = df.Beta200dd[-1], 
+            #title = {'text': "Reversão MMA21"}, 
+            delta = {'reference': df.Beta200dd.mean(), 'relative': True,'valueformat':'.2%'}, 
+            gauge={
+                'axis':{
+                    'range':[math.floor(df.Beta200dd.min()),math.ceil(df.Beta200dd.max())],
+                    'dtick': ( math.ceil(df.Beta200dd.max()) - math.floor(df.Beta200dd.min()) )/10,
+                    'tickformat':'0.1f'
+                },
+                'steps' : [
+                    {'range': [math.floor(df.Beta200dd.min()), (math.floor(df.Beta200dd.min())*0.5)], 'color': "rgba(50,50,200,0.55)"},
+                    {'range': [(math.ceil(df.Beta200dd.max())*0.5), math.ceil(df.Beta200dd.max())], 'color': "rgba(200,50,50,0.55)"}],
+                'threshold' : {'line': {'color': "red", 'width': 4}, 
+                            'thickness': 1, 
+                            'value': df.Beta200dd.mean()},
+                'bar': {'color': "black"}
+            }
+        ), row=3, col=2  ),
+
+    fig7.update_layout( title='<b>BETA MÓVEL</b>', xaxis_title='', yaxis_title='<b>Valor', legend=dict(orientation="h"), hovermode='x unified')
+    fig7.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]), 
+
+    return fig, fig2, fig1, fig3, fig4, fig5, fig6, fig7, ""

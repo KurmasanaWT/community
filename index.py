@@ -10,7 +10,7 @@ import pandas as pd
 from app import app 
 from app import server
 
-from codes import meanrev, mosaic #returnlog
+from codes import meanrev, correl, mosaic #returnlog
 
 navbar = html.Div(className='topnav',
     children=[ 
@@ -64,16 +64,9 @@ cards = dbc.Container(dbc.Row(
             ]),
             html.Br(),
             
-            
             meanrev.get(), ############## IMPORTANT
             
             dbc.CardBody([
-
-                #btn001,
-                
-
-
-                #html.P("Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
 
                 html.P([
                     "Conteúdo adicional sobre o tópico: ", 
@@ -84,14 +77,8 @@ cards = dbc.Container(dbc.Row(
                         dbc.ListGroupItem('Google Scholar',href='https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0,5&q=%22mean+reversion%22+%22stock+market%22', target="new"),
                     ])
                 ]),
-
-                #html.P([
-                #    "Tema sugerido por : ", 
-                #    html.A([" RAFI | ",html.I(className="fab fa-twitter"), " @RaphaFigueredo"], href='https://twitter.com/RaphaFigueredo', target="new")
-                #]),
-
                 
-                dbc.Badge("Versão Beta 2022-002"),
+                dbc.Badge("Versão Beta 2022-003"),
                 dbc.Badge("Médias"),
                 dbc.Badge("FinTwit"),
                 dbc.Badge("RAFI"),
@@ -99,7 +86,7 @@ cards = dbc.Container(dbc.Row(
             ], style={'text-align':'center', 'justify-content':'center'}),
         ], className="cardSize-code", ),
      
-      ### incluir mais cards aqui
+    ### incluir mais cards aqui
 
     ], className='content'), fluid=True)
 
@@ -199,7 +186,7 @@ alert=html.Div(
     dbc.Alert(
         id="alert-beta",
         className="alerts",
-        children="*** VERSÃO BETA - 20220322 ***",
+        children="*** VERSÃO BETA - 20220330 ***",
         dismissable=True,
         is_open=True,
         fade=True,

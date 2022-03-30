@@ -1,6 +1,8 @@
 ﻿value;label
 ^BVSP;Índice Bovespa (iBovespa)
-BRL=X;Dólar Americano (USD)
+BRL=X;Dólar Americano (USD) / Real (BRL)
+EURBRL=X;Euro (EUR) / Real (BRL)
+EURUSD=X;Euro (EUR) / Dólar Americano (USD)
 ^GSPC;S&P 500
 ^DJI;Dow Jones Industrial Average
 ^IXIC;NASDAQ Composite
