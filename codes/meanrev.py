@@ -1,5 +1,3 @@
-from telnetlib import theNULL
-from turtle import width
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
@@ -10,7 +8,7 @@ import plotly.io as pio
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import yfinance as yf
-import math
+#import math
 from sklearn.linear_model import LinearRegression
 
 from app import app
