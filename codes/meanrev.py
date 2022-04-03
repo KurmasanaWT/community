@@ -331,9 +331,9 @@ def display(sutb, tkr, idx, prd, itv):
     fig.add_trace( go.Scatter(x=df.index, y=df.CSMA50dd[tkr], mode='lines', name='MMA50', line_width=1,line_color='navy', line_shape='linear'), col=1, row=1 )
     fig.add_trace( go.Scatter(x=df.index, y=df.CEMA200dd[tkr], mode='lines', name='EMA200', line_width=1,line_color='purple', line_shape='linear'), col=1, row=1 )
     
-    fig.add_trace( speed_dial(df,"Close",tkr), row=1, col=2 ),
+    fig.add_trace( speed_dial(df,"Close",tkr), row=1, col=2 )
 
-    fig.add_trace( speed_dial(df,"VarClose",tkr), row=2, col=2 ),
+    fig.add_trace( speed_dial(df,"VarClose",tkr), row=2, col=2 )
 
     fig.add_trace( go.Histogram(x=df.VarClose[tkr], name=tkr, histnorm='percent', offsetgroup=0), col=2, row=3 )
 
@@ -389,13 +389,13 @@ def display(sutb, tkr, idx, prd, itv):
         ])
 
     fig2.add_trace( go.Scatter(x=df.index, y=df.RSMA21dd[tkr], mode='lines', line_width=1, name='R_MMA21', line_color='orange', line_shape='linear') , row=1, col=1  ),
-    fig2.add_trace( speed_dial(df,"RSMA21dd",tkr), row=1, col=2 ),
+    fig2.add_trace( speed_dial(df,"RSMA21dd",tkr), row=1, col=2 )
 
     fig2.add_trace( go.Scatter(x=df.index, y=df.RSMA50dd[tkr], mode='lines', line_width=1, name='R_MMA50', line_color='navy')  , row=2, col=1  ) 
-    fig2.add_trace( speed_dial(df,"RSMA50dd",tkr), row=2, col=2 ),
+    fig2.add_trace( speed_dial(df,"RSMA50dd",tkr), row=2, col=2 )
 
     fig2.add_trace( go.Scatter(x=df.index, y=df.REMA200dd[tkr], mode='lines', line_width=1, name='R_EMA200', line_color='purple', line_shape='linear')  , row=3, col=1  )
-    fig2.add_trace( speed_dial(df,"REMA200dd",tkr), row=3, col=2 ),
+    fig2.add_trace( speed_dial(df,"REMA200dd",tkr), row=3, col=2 )
  
     fig2.update_layout(title_text='<b>REVERSÃO À MÉDIA - Individualizada</b>', yaxis_title='<b>Valor</b>', xaxis_rangeslider_visible=False, hovermode='x unified', legend=dict(orientation="h") )
 
@@ -467,6 +467,7 @@ def display(sutb, tkr, idx, prd, itv):
     fig4 = make_subplots(
         rows=3, cols=2,
         column_widths=[.85,.15],
+        row_heights=[.33, .33, .33],
         specs= [
             [ {'type' : 'xy', 'rowspan':3}, {'type' : 'indicator'} ],
             [ None, {'type' : 'indicator'} ],
@@ -483,9 +484,9 @@ def display(sutb, tkr, idx, prd, itv):
         annotation_text="", 
         annotation_position="bottom left", col=1, row=1)
 
-    fig4.add_trace( speed_dial(df,"RetAcum",tkr), row=1, col=2 ),
+    fig4.add_trace( speed_dial(df,"RetAcum",tkr), row=1, col=2 )
 
-    fig4.add_trace( speed_dial(df,"RetAcum",idx), row=2, col=2 ),
+    fig4.add_trace( speed_dial(df,"RetAcum",idx), row=2, col=2 )
     
     fig4.add_trace( go.Histogram(x=df.RetAcum[tkr], name=tkr, histnorm='percent', offsetgroup=0), col=2, row=3  )
     fig4.add_trace( go.Histogram(x=df.RetAcum[idx], name=idx, histnorm='percent', offsetgroup=0), col=2, row=3  )
@@ -497,10 +498,9 @@ def display(sutb, tkr, idx, prd, itv):
     
     fig4.update_layout( yaxis_title='Var. Percentual Acumulada', yaxis2_title='Percent. Ocorrências' )
     fig4.update_layout( yaxis_showspikes=True, yaxis_spikemode='across', yaxis_spikesnap='cursor')
-    
 
     fig4.update_traces(bingroup='overlay', nbinsx=20, marker_line_color='rgb(0,0,0)', marker_line_width=1.5, opacity=0.5, col=2, row=3, cumulative_enabled=False) 
-    fig4.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]), 
+    fig4.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ])
 
     ### FIG 5 ---------------------------------------------------------------------------    
     
@@ -515,13 +515,13 @@ def display(sutb, tkr, idx, prd, itv):
         ],)
 
     fig5.add_trace( go.Scatter(x=df.index, y=df.RCorr21dd, mode="lines", line_width=1, line_color="orange", name="RCorr21dd", connectgaps=True, line_shape='linear') , row=1, col=1 ) 
-    fig5.add_trace( speed_dial(df,"RCorr21dd",None), row=1, col=2 ),
+    fig5.add_trace( speed_dial(df,"RCorr21dd",None), row=1, col=2 )
 
     fig5.add_trace( go.Scatter(x=df.index, y=df.RCorr50dd, mode="lines", line_width=1, line_color="navy", name="RCorr50dd", connectgaps=True, line_shape='linear') , row=2, col=1 ) 
-    fig5.add_trace( speed_dial(df,"RCorr50dd",None), row=2, col=2 ),
+    fig5.add_trace( speed_dial(df,"RCorr50dd",None), row=2, col=2 )
         
     fig5.add_trace( go.Scatter(x=df.index, y=df.RCorr200dd, mode="lines", line_width=1, line_color="purple", name="RCorr200dd", connectgaps=True, line_shape='linear') , row=3, col=1 ) 
-    fig5.add_trace( speed_dial(df,"RCorr200dd",None), row=3, col=2 ),
+    fig5.add_trace( speed_dial(df,"RCorr200dd",None), row=3, col=2 )
 
     fig5.update_layout( title='<b>CORRELAÇÃO MÓVEL</b>', xaxis_title='', yaxis_title='<b>Valor', legend=dict(orientation="h"), hovermode='x unified' )
 
@@ -529,7 +529,7 @@ def display(sutb, tkr, idx, prd, itv):
     fig5.add_shape( x0=date_ini, x1=date_end, y0=0, y1=0, type="line", line_color='black', line_dash='dot', line_width=1, row=2, col=1 ) 
     fig5.add_shape( x0=date_ini, x1=date_end, y0=0, y1=0, type="line", line_color='black', line_dash='dot', line_width=1, row=3, col=1 ) 
  
-    fig5.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]), 
+    fig5.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]) 
 
     ### FIG 6 ---------------------------------------------------------------------------    
     fig6 = make_subplots(
@@ -542,13 +542,13 @@ def display(sutb, tkr, idx, prd, itv):
             [{'type' : 'xy'}, {'type' : 'indicator'}],
         ],)
     fig6.add_trace( go.Scatter(x=df.index, y=df.Alpha21dd, mode="lines", line_width=1, line_color="orange", name="Alpha21dd", connectgaps=True, line_shape='linear') , row=1, col=1) 
-    fig6.add_trace( speed_dial(df,"Alpha21dd",None), row=1, col=2 ),
+    fig6.add_trace( speed_dial(df,"Alpha21dd",None), row=1, col=2 )
 
     fig6.add_trace( go.Scatter(x=df.index, y=df.Alpha50dd, mode="lines", line_width=1, line_color="navy", name="Alpha50dd", connectgaps=True, line_shape='linear') , row=2, col=1) 
-    fig6.add_trace( speed_dial(df,"Alpha50dd",None), row=2, col=2 ),
+    fig6.add_trace( speed_dial(df,"Alpha50dd",None), row=2, col=2 )
 
     fig6.add_trace( go.Scatter(x=df.index, y=df.Alpha200dd, mode="lines", line_width=1, line_color="purple", name="Alpha200dd", connectgaps=True, line_shape='linear') , row=3, col=1) 
-    fig6.add_trace( speed_dial(df,"Alpha200dd",None), row=3, col=2 ),
+    fig6.add_trace( speed_dial(df,"Alpha200dd",None), row=3, col=2 )
     
     fig6.update_layout( title='<b>ALPHA MÓVEL</b>', xaxis_title='', yaxis_title='<b>Valor', legend=dict(orientation="h"), hovermode='x unified')
 
@@ -556,7 +556,7 @@ def display(sutb, tkr, idx, prd, itv):
     fig6.add_shape( x0=date_ini, x1=date_end, y0=0, y1=0, type="line", line_color='black', line_dash='dot', line_width=1, row=2, col=1 ) 
     fig6.add_shape( x0=date_ini, x1=date_end, y0=0, y1=0, type="line", line_color='black', line_dash='dot', line_width=1, row=3, col=1 ) 
 
-    fig6.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ]), 
+    fig6.update_xaxes( rangebreaks=[ dict(bounds=["sat", "mon"]) ])
 
     ### FIG 7 ---------------------------------------------------------------------------    
     fig7 = make_subplots(
