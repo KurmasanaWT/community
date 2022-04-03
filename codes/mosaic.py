@@ -23,7 +23,7 @@ layout = dbc.Container(
 
         dbc.Card([
             #dbc.CardHeader("DEUTSCH WELLE (Alemanha)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/V9KZGs1MtP4?&autoplay=1&mute=1", allow="fullscreen")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/m01az_TdpQI?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),
 
         dbc.Card([
@@ -38,7 +38,7 @@ layout = dbc.Container(
 
         dbc.Card([
             #dbc.CardHeader("AL JAZEERA (Catar)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/-upyPouRrB8?&autoplay=1&mute=1", allow="fullscreen")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/F-POY4Q0QSI?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),
   
         dbc.Card([
@@ -63,7 +63,7 @@ layout = dbc.Container(
 
         dbc.Card([
             #dbc.CardHeader("WEBCAM UCRÂNIA (Ao Vivo)"),
-            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/e2gC37ILQmk?&autoplay=1&mute=1", allow="fullscreen")]),
+            dbc.CardBody([html.Iframe(className="ytvid", width="420", height="315", src="https://www.youtube.com/embed/3hiyVq44pK8?&autoplay=1&mute=1", allow="fullscreen")]),
             ], className="cardSize-vid"),     
 
         html.Div(dbc.Badge(children=[
