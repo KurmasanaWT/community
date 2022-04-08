@@ -58,30 +58,15 @@ cards = dbc.Container(dbc.Row(
     [
      
         dbc.Card([
-            dbc.CardHeader([html.H6(children=["REVERSÃO À MÉDIA "]),
-            html.P(className='card-header-sub', children="Normalização de médias e a distância dos preços em relação à mesma para avaliar as bandas de cima e de baixo."),
-            html.P(dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT/community/blob/main/codes/meanrev.py', target="new")),
+            dbc.CardHeader([html.H6(children=["INCEPTION CODEX"]),
+            html.P(className='card-header-sub', children="Primeiros códigos desenvolvidos para a comunidade e com inputs da comunidade!"),
+            #html.P(dbc.Button([html.I(className="fab fa-github")," GitHub "], href='https://github.com/KurmasanaWT/community/blob/main/codes/meanrev.py', target="new")),
             ]),
-            html.Br(),
+            #html.Br(),
             
             meanrev.get(), ############## IMPORTANT
             
             dbc.CardBody([
-
-                html.P([
-                    "Conteúdo adicional sobre o tópico: ", 
-                    dbc.ListGroup([
-                        dbc.ListGroupItem('Investopedia',href='https://www.investopedia.com/terms/m/meanreversion.asp', target="new"),
-                        dbc.ListGroupItem('FactSet',href='https://insight.factset.com/how-much-alpha-can-be-derived-from-a-mean-reversion-strategy', target="new"),
-                        dbc.ListGroupItem('SciELO',href='https://search.scielo.org/?fb=&q=%22mean+reversion%22&lang=pt&where=&filter%5Bin%5D%5B%5D=*', target="new"),
-                        dbc.ListGroupItem('Google Scholar',href='https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0,5&q=%22mean+reversion%22+%22stock+market%22', target="new"),
-                    ])
-                ]),
-                
-                dbc.Badge("Versão Beta 2022-003"),
-                dbc.Badge("Médias"),
-                dbc.Badge("FinTwit"),
-                dbc.Badge("RAFI"),
 
             ], style={'text-align':'center', 'justify-content':'center'}),
         ], className="cardSize-code", ),
@@ -100,7 +85,7 @@ home_cards = dbc.Container(dbc.Row(
                 html.P("Nós acreditamos na capacidade de ir mais longe juntos, de exergar em grupo algo que nunca veríamos sozinhos."),
                 html.P("Acreditamos no potencial ilimitado da inteligência e creatividade humanas."),
                 html.P("Na força e simplicidade de um objetivo comum."),
-                html.P("Se vocÊ é um especialista do mercado financeiro, um desenvolvedor Python ou alguém interessado na união do mundo das finanças com a tecnologia, junte-se a nós!"),
+                html.P("Se você é um especialista do mercado financeiro, um desenvolvedor Python ou alguém interessado na união do mundo das finanças com a tecnologia, junte-se a nós!"),
                 html.P(["Siga a KWT no ", html.A([html.I(className="fab fa-twitter"), " Twitter"], href='https://twitter.com/KurmasanaWT', target="new")," ou no ", html.A([html.I(className="fab fa-github")," GitHub"], href='https://github.com/KurmasanaWT', target="new")]),
                 html.P(["Se achar melhor, entre em contato por email:", html.Br(),html.A([" kwt-community@1971ventures.com"], href='mailto:kwt-community@1971ventures.com', target="new")]),
                 dbc.Badge("22/03/2022")
@@ -131,10 +116,10 @@ kwt_cards = dbc.Container(dbc.Row(
          dbc.Card([
             dbc.CardHeader(html.H6("REFERÊNCIAS")),
             dbc.CardBody([
-                html.Li([html.B("FOCO"), " : Desenvolvimento de sistemas de Inteligência Artificial eficazes em aplicações no mercado de capitais."]),
-                html.Li([html.B("ESTRATÉGIA"), " : Inteligência não é estatística. Inteligência é capacidade de percepção, interpretação, adaptação e ação."]),
-                html.Li([html.B("INOVAÇÃO"), " : Superar a eficiência e eficácia da gestão humana no mercado de capitais em operações de swing-trade, democratizando a gestão de ativos e alavancando estratégias institucionais."]),
-                html.Li([html.B("TRANSFORMAÇÃO"), " : Nossas soluções devem diminuir o gap entre o especialista em finanças e o especialista em tecnologia."]),
+                html.Li([html.B("FOCO"), " : Desenvolvimento de sistemas de Inteligência Artificial eficazes em aplicações no mercado de capitais."]),html.Br(),
+                html.Li([html.B("ESTRATÉGIA"), " : Inteligência não é estatística. Inteligência é capacidade de percepção, interpretação, adaptação e ação."]),html.Br(),
+                html.Li([html.B("INOVAÇÃO"), " : Superar a eficiência e eficácia da gestão humana no mercado de capitais em operações de swing-trade, democratizando a gestão de ativos e alavancando estratégias institucionais."]),html.Br(),
+                html.Li([html.B("TRANSFORMAÇÃO"), " : Nossas soluções devem diminuir o gap entre o especialista em finanças e o especialista em tecnologia."]),html.Br(),
             ], style={}),
         ], className="cardSize", ),
 

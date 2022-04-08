@@ -7,7 +7,7 @@
   --secondary: #7fb48c !important;
   --terciary: #0a0 !important;
   --linkcolor: #0a0 !important;
-  --altbgColor: rgba(200, 130, 90, 0.4) !important;
+  --altbgColor: rgba(39, 39, 39, 0.10) !important;
   --success: #28a745;
   --info: #17a2b8;
   --warning: #ffc107;
@@ -43,7 +43,7 @@
 html {
   margin: 0px 0px 0px 0px !important;
   padding: 0px 0px 0px 0px !important;
-  font-family: Roboto !important;
+  font-family: var(--font-family-sans-serif) !important;
   font-size: 14px;
   text-align: left;
   color: var(--primary);
@@ -54,7 +54,6 @@ body {
   margin: 0px 0px 0px 0px !important;
   padding: 0px 0px 0px 0px !important;
   background-color: var(--bgColor);
-  font-family: Roboto !important;
   color: var(--primary);
   text-decoration: none;
   text-align: justify;
@@ -79,7 +78,7 @@ a {
  
  a:hover, h6 {
   color: var(--linkcolor);
-  /*font-weight: bolder;*/
+  font-weight: bolder;
   }
 
 h5 {
@@ -92,7 +91,9 @@ h5 {
 
 h6, .tab {
   color: var(--primary);
-  font-size: 16px;
+  font-size: 18px !important;
+  margin-bottom: 0px !important;
+  line-height:normal !important;
   font-weight: 700;
   padding: 0px;
   }
@@ -105,13 +106,20 @@ h6, .tab {
   border-radius: 5px 5px 0px 0px !important;
 }
 
-*.gtitle {
+*.tab-content {
+  color:#000;
+  background-color: white  !important;
+  border-color: transparent !important;
+  padding: 5px !important;
+  border-radius: 3px 3px 3px 3px !important;
+}
+
+*.g, *.gtitle, *.g-xtitle, *.g-ytitle, *.g-x2title, *.g-y2title {
   border-left-width: 15px !important;
   border-left-color:var(--success) !important;
-  font-family: Roboto !important;
+  /*font-family: var(--font-family-monospace) !important;*/
   border: 5px !important;
   border-color: var(--success) !important;
-  font-family: Roboto !important;
   padding: 10px !important;
   margin: 10px !important;
 }
@@ -124,9 +132,10 @@ h6, .tab {
 }
 
 li, li::marker {
-  padding-left: 15px;
-  margin-left:10px;
-  margin-bottom:15px;
+  padding-left: 0px 0px 0px 0px;
+  margin-left: 15px;
+  margin-bottom:0px;
+  width:100%;
   }
 
 .social {
@@ -210,6 +219,8 @@ div.inline-block > span.mr-1.self_center.badge {
   background-color: var(--primary) !important;
 }
 
+
+
 *.btn.btn-primary {
   color: #000;
   background-color:  var(--primary) !important;
@@ -235,6 +246,7 @@ div.inline-block > span.mr-1.self_center.badge {
 
 .badge {
   color: #000 !important;
+  border-radius: 15px !important;
   background-color: var(--primary) !important;
   margin: 2px;
 }
@@ -245,14 +257,41 @@ div.inline-block > span.mr-1.self_center.badge {
   margin: 2px;
 }
 
-
-*.indicatorlayer, *.trace {
-  padding: 10px !important;
-  margin: 10px !important;
+.js-plotly-plot .plotly .modebar {
+  left: 50%;
+  /*transform: translateX(-50%);*/
 }
 
-*.annotation-text-g .annotation-text {
-  font-size: 12px !important;
+g.indicatorlayer, g.trace {
+  padding: 0px !important;
+  margin: 0px !important;
+  height: 50px !important;
+}
+*.indicatorlayer text.title {
+  font-size: 10px !important;
+  border: 10px;
+  margin: 10px;
+  padding: 10px;
+}
+
+g.cursor-pointer text, *.legendtext {
+  font-size: 11px !important;
+  /*font-family: var(--font-family-monospace) !important;*/
+}
+
+g.annotation-arrow-g path, g.cursor-pointer rect {
+  stroke-width: 2px !important;
+  stroke:#ffc107 !important;
+}
+
+g.cursor-pointer rect {
+  border-radius: 5px 5px 0px 0px !important;
+  box-shadow: 0px 2px 4px black;
+}
+
+.xtick text, .ytick text, *.xtitle, *.ytitle, *.x2title, *.y2title, .x2tick text, .y2tick text, *.x3title, *.y3title, .x3tick text, .y3tick text {
+  font-size: 11px !important;
+  /*font-family: var(--font-family-monospace) !important;*/
 }
 
 .container-fluid {
@@ -269,7 +308,6 @@ div.inline-block > span.mr-1.self_center.badge {
   margin: 0px 0px 0px 0px  !important;
   text-align:center;
   vertical-align: middle !important;  
-  color: var(--terciary);
   background-color:  rgb(34, 33, 33) !important;
 }
 
@@ -285,16 +323,6 @@ div.inline-block > span.mr-1.self_center.badge {
 
 .card-body {
   padding: 20px !important;
-}
-
-text.title {
- font-size: 12px !important;
-}
-
-.dash-graph {
-  width:100%;
-  height: fit-content;
-  box-shadow: 0px 2px 3px black;
 }
 
 .cardSize {
@@ -349,7 +377,6 @@ text.title {
 
 .kwtdrops{
   display: contents !important;
-  vertical-align: middle !important;  
 }
 
 .kwtchartbtn{
@@ -362,13 +389,22 @@ text.title {
   margin: 0px !important;
   border: 0px !important;  
 }
-
-.list-group-item {
-	position: relative;
-	display: block;
-	padding: 0px;
-	color: rgba(200, 180, 180, 1);
+a.list-group-item, .list-group-item {
+	display: flex;
+  margin: 0px;
+  min-width: 300px;
+	color: rgba(200, 180, 180, 1) !important;
 	text-decoration: none;
-	background-color: rgba(0,0,0,.125);
-	border: 1px solid rgba(200, 180, 180, 0.25);
+  background-color: var(--altbgColor) !important;
+	border: 1px solid rgba(200, 180, 180, 0.50);
+}
+
+.list-group-item a {
+  text-decoration: none !important;
+}
+
+.list-group-item a:hover {
+  color: var(--linkcolor) !important;
+  font-weight: bolder;
+  text-decoration: underline !important;
 }
