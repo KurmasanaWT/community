@@ -359,8 +359,13 @@ def display(sutb, tkr, idx, prd, itv):
     df = df[df.index.dayofweek < 5]
 
     for n in df.Close:
-        #df['Return',n] = df.Close[n].pct_change()
+        df.fillna(method="bfill",inplace=True)
+
+        df['PrevClose',n]=df.Close[n].shift(1)
+        df['VarClose',n] = df.Close[n].pct_change()
+        #df['VarClose',n]=((df.Close[n]/df.PrevClose[n])-1)*100
         df['Return',n] = (np.log(df.Close[n] / df.Close[n].shift(1)))*100
+
         df.fillna(method="bfill",inplace=True)
         df.fillna(method="ffill",inplace=True)
 
@@ -378,9 +383,6 @@ def display(sutb, tkr, idx, prd, itv):
         df['Return200dd',n] = (np.log(df.Close[n] / df.Close[n].shift(per200dd)))*100
         ##divide by zero encountered in log
 
-        df['PrevClose',n]=df.Close[n].shift(1)
-
-        df['VarClose',n]=((df.Close[n]/df.PrevClose[n])-1)*100
         df['VarAcum',n] = ((df.Close[n]/df.Close[n].iloc[0])-1)*100
         df["VarACum_Color",n] = np.where(df.VarAcum[n] < 0, 'red', 'green')
 
@@ -408,22 +410,22 @@ def display(sutb, tkr, idx, prd, itv):
 
     ### ROLLING CORRELATION
 
-    df['RCorr21dd'] = df['Return'][tkr].rolling(per21dd).corr(df['Return'][idx])
-    df['RCorr50dd'] = df['Return'][tkr].rolling(per50dd).corr(df['Return'][idx])
-    df['RCorr200dd'] = df['Return'][tkr].rolling(per200dd).corr(df['Return'][idx])
+    df['RCorr21dd'] = df['VarClose'][tkr].rolling(per21dd).corr(df['VarClose'][idx])
+    df['RCorr50dd'] = df['VarClose'][tkr].rolling(per50dd).corr(df['VarClose'][idx])
+    df['RCorr200dd'] = df['VarClose'][tkr].rolling(per200dd).corr(df['VarClose'][idx])
 
     ### RETORNO COMPARADO
 
-    df['RetComp'] = df['RetAcum'][tkr] / df['RetAcum'][idx]
-    df['RetCompDif'] = df['RetAcum'][tkr] - df['RetAcum'][idx]
+    df['RetComp'] = df['VarAcum'][tkr] / df['VarAcum'][idx]
+    df['RetCompDif'] = df['VarAcum'][tkr] - df['VarAcum'][idx]
     df["RetCompDif_Color"] = np.where(df.RetCompDif < 0, 'red', 'green')
     df['TBENCK'] = df['Close'][tkr] / df['Close'][idx]
 
     ### CALCULA ALPHA E BETA
 
-    df['Alpha21dd'],df['Beta21dd'] = market_beta(df.Return[tkr], df.Return[idx], 21)
-    df['Alpha50dd'],df['Beta50dd'] = market_beta(df.Return[tkr], df.Return[idx], 50)
-    df['Alpha200dd'],df['Beta200dd'] = market_beta(df.Return[tkr], df.Return[idx], 200)
+    df['Alpha21dd'],df['Beta21dd'] = market_beta(df.VarClose[tkr], df.VarClose[idx], 21)
+    df['Alpha50dd'],df['Beta50dd'] = market_beta(df.VarClose[tkr], df.VarClose[idx], 50)
+    df['Alpha200dd'],df['Beta200dd'] = market_beta(df.VarClose[tkr], df.VarClose[idx], 200)
 
     '''    
     #21dd
@@ -651,8 +653,8 @@ def display(sutb, tkr, idx, prd, itv):
         ],
         )
     
-    fig4.add_trace( go.Scatter(x=df.index, y=df.RetAcum[tkr], mode="lines", line_width=2, line_color="blue", name=tkr, connectgaps=True, line_shape='linear') , col=1, row=1 ) 
-    fig4.add_trace( go.Scatter(x=df.index, y=df.RetAcum[idx], mode="lines", line_width=2, line_dash='dot', line_color="black", name=idx, connectgaps=True, line_shape='linear') , col=1, row=1 ) 
+    fig4.add_trace( go.Scatter(x=df.index, y=df.VarAcum[tkr], mode="lines", line_width=2, line_color="blue", name=tkr, connectgaps=True, line_shape='linear') , col=1, row=1 ) 
+    fig4.add_trace( go.Scatter(x=df.index, y=df.VarAcum[idx], mode="lines", line_width=2, line_dash='dot', line_color="black", name=idx, connectgaps=True, line_shape='linear') , col=1, row=1 ) 
     fig4.add_trace( go.Bar( x=df.index, y=df.RetCompDif, marker_color=df.RetCompDif_Color, opacity=0.5, name='Delta p.p.'), col=1, row=1 ) 
 
     fig4.add_hline(y=0, 
@@ -660,12 +662,12 @@ def display(sutb, tkr, idx, prd, itv):
         annotation_text="", 
         annotation_position="bottom left", col=1, row=1)
 
-    fig4.add_trace( speed_dial(df,"RetAcum",tkr), row=1, col=2 )
+    fig4.add_trace( speed_dial(df,"VarAcum",tkr), row=1, col=2 )
 
-    fig4.add_trace( speed_dial(df,"RetAcum",idx), row=2, col=2 )
+    fig4.add_trace( speed_dial(df,"VarAcum",idx), row=2, col=2 )
     
-    fig4.add_trace( go.Histogram(x=df.RetAcum[tkr], name=tkr, histnorm='percent', offsetgroup=0), col=2, row=3  )
-    fig4.add_trace( go.Histogram(x=df.RetAcum[idx], name=idx, histnorm='percent', offsetgroup=0), col=2, row=3  )
+    fig4.add_trace( go.Histogram(x=df.VarAcum[tkr], name=tkr, histnorm='percent', offsetgroup=0), col=2, row=3  )
+    fig4.add_trace( go.Histogram(x=df.VarAcum[idx], name=idx, histnorm='percent', offsetgroup=0), col=2, row=3  )
 
     fig4.update_layout( title='<b>RETORNO ACUMULADO</b>', legend=dict(orientation="h"), hovermode='x unified')
     #fig4.update_layout( xaxis_title='', yaxis_title='Var. Percentual Acumulada', xaxis2_title='Var. %', yaxis2_title='Percent. Ocorrências', hovermode='x unified', legend=dict(orientation="h") )
