@@ -3,6 +3,7 @@
 BRL=X;Dólar Americano (USD) / Real (BRL)
 EURBRL=X;Euro (EUR) / Real (BRL)
 EURUSD=X;Euro (EUR) / Dólar Americano (USD)
+DX-Y.NYB; DXY Dollar Index - US Dollar/USDX
 ^GSPC;S&P 500
 ^DJI;Dow Jones Industrial Average
 ^IXIC;NASDAQ Composite
